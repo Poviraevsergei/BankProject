@@ -23,5 +23,4 @@ public class AspectLog {
         log.info(this);
         return proceed;
     }
-
 }
