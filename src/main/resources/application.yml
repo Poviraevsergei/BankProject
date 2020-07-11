@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: "jdbc:postgresql://localhost:5432/bank_database"
+    username: admin
+    password: admin
+    hikari:
+      maximum-pool-size: 10
