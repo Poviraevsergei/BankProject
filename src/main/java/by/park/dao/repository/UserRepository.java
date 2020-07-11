@@ -3,14 +3,16 @@ package by.park.dao.repository;
 import by.park.dao.UserDao;
 import by.park.domain.User;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
-@Repository("userDaoImpl")
+@Repository("userDaoRepository")
 public class UserRepository implements UserDao {
     JdbcTemplate jdbcTemplate;
 
@@ -32,13 +34,13 @@ public class UserRepository implements UserDao {
     @Override
     public List<User> findAll() {
         final String findAllQuery = "select * from m_users order by id desc";
-        return jdbcTemplate.query(findAllQuery, this::resultUserAdd);
+        return jdbcTemplate.query(findAllQuery, this::userRowMapper);
     }
 
     @Override
     public User findById(Long userId) {
         final String findById = "select * from m_users where id = ?";
-        return jdbcTemplate.queryForObject(findById, this::resultUserAdd, userId);
+        return jdbcTemplate.queryForObject(findById, this::userRowMapper, userId);
     }
 
     @Override
@@ -48,6 +50,16 @@ public class UserRepository implements UserDao {
         jdbcTemplate.update(saveQuery, user.getUserName(), user.getSurname(), user.getBirthDate(), user.getLogin(), user.getPassword(), user.getPassportNumber());
         Long lastUserId = jdbcTemplate.queryForObject(getLastId, Long.class);
         return findById(lastUserId);
+    }
+
+    @Override
+    public Optional<User> findByLogin(String username) {
+        try {
+            final String findByLogin = "select * from m_users where user_login = ?";
+            return Optional.of(jdbcTemplate.queryForObject(findByLogin, this::userRowMapper));
+        } catch (DataAccessException e){
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -65,7 +77,7 @@ public class UserRepository implements UserDao {
         return findById(userId);
     }
 
-    private User resultUserAdd(ResultSet resultSet, int i) throws SQLException {
+    private User userRowMapper(ResultSet resultSet, int i) throws SQLException {
         User user = new User();
         user.setId(resultSet.getLong(USER_ID));
         user.setUserName(resultSet.getString(USER_NAME));
