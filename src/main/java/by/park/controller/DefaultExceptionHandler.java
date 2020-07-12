@@ -20,15 +20,8 @@ public class DefaultExceptionHandler {
         return new ResponseEntity<>(new ErrorMessage(1L, e.getLocalizedMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ErrorMessage> handleAuthenticationException(AuthenticationException e) {
-        log.error(e.getLocalizedMessage(), e);
-        return new ResponseEntity<>(new ErrorMessage(2L, e.getLocalizedMessage()), HttpStatus.UNAUTHORIZED);
-    }
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleOthersException(Exception e) {
-        /* Handles all other exceptions. Status code 500. */
         log.error(e.getMessage(), e);
         log.info(e.getMessage(), e);
         return new ResponseEntity<>(new ErrorMessage(e.getMessage()),

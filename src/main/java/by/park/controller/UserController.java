@@ -2,8 +2,8 @@ package by.park.controller;
 
 import by.park.controller.request.CreateUserRequest;
 import by.park.controller.request.UpdateUserRequest;
+import by.park.dao.repository.UserRepository;
 import by.park.domain.User;
-import by.park.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -18,16 +18,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
-    private UserService userService;
+    private UserRepository userRepository;
 
-    public UserController(@Qualifier("userService") UserService userService) {
-        this.userService = userService;
+    public UserController(@Qualifier("userRepository") UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @GetMapping
@@ -39,7 +41,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     public List<User> findAll() {
-        return userService.findAll();
+        return userRepository.findAll();
     }
 
     @GetMapping("/{id}")
@@ -51,7 +53,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     public User findById(@PathVariable("id") Long id) {
-        return userService.findById(id);
+        return userRepository.findById(id);
     }
 
     @PostMapping
@@ -65,13 +67,15 @@ public class UserController {
     })
     public User save(@Valid @RequestBody CreateUserRequest createUserRequest) {
         User user = new User();
-        user.setUserName(createUserRequest.getUserName());
+        user.setUsername(createUserRequest.getUserName());
         user.setSurname(createUserRequest.getSurname());
         user.setBirthDate(createUserRequest.getBirthDate());
         user.setLogin(createUserRequest.getLogin());
+        user.setCreated(new Timestamp(new Date().getTime()));
+        user.setChanged(new Timestamp(new Date().getTime()));
         user.setPassword(createUserRequest.getPassword());
         user.setPassportNumber(createUserRequest.getPassportNumber());
-        return userService.save(user);
+        return userRepository.save(user);
     }
 
     @PutMapping
@@ -84,16 +88,20 @@ public class UserController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     public User update(@Valid @RequestBody UpdateUserRequest updateUserRequest) {
+        User oldUser = findById(updateUserRequest.getId());
+
         User user = new User();
         user.setId(updateUserRequest.getId());
-        user.setUserName(updateUserRequest.getUserName());
+        user.setUsername(updateUserRequest.getUserName());
         user.setSurname(updateUserRequest.getSurname());
         user.setBirthDate(updateUserRequest.getBirthDate());
         user.setLogin(updateUserRequest.getLogin());
+        user.setCreated(oldUser.getCreated());
+        user.setChanged(new Timestamp(new Date().getTime()));
         user.setPassword(updateUserRequest.getPassword());
         user.setPassportNumber(updateUserRequest.getPassportNumber());
         user.setDeleted(updateUserRequest.getDeleted());
-        return userService.update(user);
+        return userRepository.update(user);
     }
 
     @DeleteMapping("/{id}")
@@ -105,6 +113,6 @@ public class UserController {
             @ApiResponse(code = 403, message = "Don't have authority"),
     })
     public User delete(@PathVariable("id") Long id) {
-        return userService.delete(id);
+        return userRepository.delete(id);
     }
 }

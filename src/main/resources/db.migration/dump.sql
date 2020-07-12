@@ -22,10 +22,10 @@ create unique index m_users_id_uindex
     on m_users (id);
 
 create unique index m_users_login_uindex
-    on m_users (user_login);
+    on m_users (login);
 
 create unique index m_users_password_uindex
-    on m_users (user_password);
+    on m_users (password);
 
 create unique index m_users_passport_number_uindex
     on m_users (passport_number);

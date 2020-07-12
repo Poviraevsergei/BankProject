@@ -6,7 +6,12 @@ spring:
     password: admin
     hikari:
       maximum-pool-size: 10
----
-jwttoken:
-  secret: secret
-  expire: 1000000
+  jpa:
+    properties:
+      javax.persistence.validation.mode: none
+      hibernate.dialect: org.hibernate.dialect.PostgreSQL10Dialect
+      hibernate.show_sql: true
+      hibernate.connection.characterEncoding: utf8mb4
+      hibernate.connection.CharSet: utf8mb4
+      hibernate.connection.useUnicode: true
+      current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext

@@ -2,21 +2,29 @@ package by.park;
 
 import by.park.config.BeanConfiguration;
 import by.park.config.SwaggerConfig;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import javax.sql.DataSource;
 
 @EnableSwagger2
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableTransactionManagement(proxyTargetClass = true)
-@SpringBootApplication(scanBasePackages = {"by.park"},
-        exclude = {
-                HibernateJpaAutoConfiguration.class
-        })
+@SpringBootApplication(scanBasePackages = {"by.park"})
+@EnableJpaRepositories
 @Import({
         BeanConfiguration.class,
         SwaggerConfig.class
@@ -24,5 +32,29 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SpringBootStarter {
     public static void main(String[] args) {
         SpringApplication.run(SpringBootStarter.class, args);
+    }
+
+    @Bean(name = "sessionFactory")
+    public SessionFactory getSessionFactory(DataSource dataSource) throws Exception {
+        LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
+        factoryBean.setPackagesToScan("by.park");
+        factoryBean.setDataSource(dataSource);
+        factoryBean.setAnnotatedPackages("by.park");
+        factoryBean.afterPropertiesSet();
+        SessionFactory sf = factoryBean.getObject();
+        System.out.println("## getSessionFactory: " + sf);
+        return sf;
+    }
+
+    @Autowired
+    @Primary
+    @Bean(name = "entityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(dataSource);
+        em.setPackagesToScan("by.park");
+        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        em.setJpaVendorAdapter(vendorAdapter);
+        return em;
     }
 }
