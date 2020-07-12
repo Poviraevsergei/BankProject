@@ -1,3 +1,4 @@
+/*
 package by.park.config;
 
 import org.springframework.context.annotation.Configuration;
@@ -11,3 +12,4 @@ public class WebMVCConfig implements WebMvcConfigurer {
         registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources");
     }
 }
+*/

@@ -1,7 +1,7 @@
 package by.park.security;
 
-import by.park.security.filter.AuthenticationTokenFilter;
-import by.park.security.util.TokenUtils;
+//import by.park.security.filter.AuthenticationTokenFilter;
+//import by.park.security.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,11 +20,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
-    private TokenUtils tokenUtils;
+  //  private TokenUtils tokenUtils;
 
-    public WebSecurityConfiguration(@Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService, TokenUtils tokenUtils) {
+    public WebSecurityConfiguration(@Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService
+      //      , TokenUtils tokenUtils
+    ) {
         this.userDetailsService = userDetailsService;
-        this.tokenUtils = tokenUtils;
+   //     this.tokenUtils = tokenUtils;
     }
 
     @Bean
@@ -33,12 +35,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Bean
+/*    @Bean
     public AuthenticationTokenFilter authenticationTokenFilterBean(AuthenticationManager authenticationManager) {
         AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter(tokenUtils, userDetailsService);
         authenticationTokenFilter.setAuthenticationManager(authenticationManager);
         return authenticationTokenFilter;
-    }
+    }*/
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -71,6 +73,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/configuration/security/**", "/swagger-ui.html", "/webjars/**").permitAll()
                 .anyRequest().authenticated();
 
-        http.addFilterBefore(authenticationTokenFilterBean(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
+  //      http.addFilterBefore(authenticationTokenFilterBean(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
     }
 }

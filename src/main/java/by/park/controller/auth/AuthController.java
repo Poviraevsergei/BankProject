@@ -19,13 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    private TokenUtils tokenUtils;
+   private TokenUtils tokenUtils;
     private AuthenticationManager authenticationManager;
     private UserDetailsService userDetailsService;
 
@@ -39,8 +37,9 @@ public class AuthController {
             @ApiResponse(code = 200, message = "Successful login user"),
             @ApiResponse(code = 500, message = "Server error, something wrong"),
     })
+
     @PostMapping
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest) {
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
         Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authRequest.getUsername(),

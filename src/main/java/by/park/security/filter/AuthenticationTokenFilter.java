@@ -1,3 +1,4 @@
+/*
 package by.park.security.filter;
 
 import by.park.security.ApplicationHeaders;
@@ -53,3 +54,4 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         }
     }
 }
+*/

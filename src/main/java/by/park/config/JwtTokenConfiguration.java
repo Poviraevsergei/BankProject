@@ -8,6 +8,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties("jwttoken")
 public class JwtTokenConfiguration {
-    private String secret;
-    private int expire;
+private String secret;
+private int expire;
 }

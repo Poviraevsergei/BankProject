@@ -2,6 +2,7 @@ package by.park.security.service;
 
 import by.park.dao.UserDao;
 import by.park.domain.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +17,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     UserDao userRepository;
 
-    public UserDetailServiceImpl(@Qualifier("userDaoRepository") UserDao userRepository) {
+    public UserDetailServiceImpl(@Qualifier("userRepository") UserDao userRepository) {
         this.userRepository = userRepository;
     }
 

@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-@Repository("userDaoRepository")
+@Repository("userRepository")
 public class UserRepository implements UserDao {
     JdbcTemplate jdbcTemplate;
 
