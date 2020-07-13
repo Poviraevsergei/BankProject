@@ -1,35 +1,3 @@
-create table m_users
-(
-    id              bigserial                                              not null
-        constraint m_users_pk
-            primary key,
-    user_name       varchar(100) default 'DEFAULT_NAME'::character varying not null,
-    user_surname    varchar(100) default 'DEFAULT_NAME'::character varying not null,
-    birth_date      date                                                   not null,
-    user_login      varchar(100)                                           not null,
-    user_password   varchar(100)                                           not null,
-    passport_number varchar(100)                                           not null,
-    created         timestamp(6),
-    changed         timestamp(6),
-    is_deleted      boolean      default false
-
-);
-
-alter table m_users
-    owner to admin;
-
-create unique index m_users_id_uindex
-    on m_users (id);
-
-create unique index m_users_login_uindex
-    on m_users (login);
-
-create unique index m_users_password_uindex
-    on m_users (password);
-
-create unique index m_users_passport_number_uindex
-    on m_users (passport_number);
-
 create table m_banks
 (
     id           bigserial                                              not null
@@ -46,41 +14,30 @@ create table m_banks
 alter table m_banks
     owner to admin;
 
-create table m_bank_account
-(
-    id         bigserial         not null
-        constraint m_bank_account_pk
-            primary key,
-    iban       varchar(100)      not null,
-    amount     bigint  default 0 not null,
-    id_user    bigint            not null
-        constraint m_bank_account_m_users_id_fk
-            references m_users
-            on update cascade on delete cascade,
-    id_bank    bigint            not null
-        constraint m_bank_account_m_banks_id_fk
-            references m_banks
-            on update cascade on delete cascade,
-    created    timestamp(6),
-    changed    timestamp(6),
-    is_deleted boolean default false
-
-);
-
-alter table m_bank_account
-    owner to admin;
-
-create unique index m_bank_account_iban_uindex
-    on m_bank_account (iban);
-
-create unique index m_bank_account_id_uindex
-    on m_bank_account (id);
-
 create unique index m_bank_id_uindex
     on m_banks (id);
 
 create unique index m_banks_bank_code_uindex
     on m_banks (bank_code);
+
+create table m_users
+(
+    id              bigserial                                              not null
+        constraint m_users_pk
+            primary key,
+    username        varchar(100) default 'DEFAULT_NAME'::character varying not null,
+    surname         varchar(100) default 'DEFAULT_NAME'::character varying not null,
+    birth_date      date                                                   not null,
+    login           varchar(100)                                           not null,
+    password        varchar(100)                                           not null,
+    passport_number varchar(50)                                            not null,
+    created         timestamp(6),
+    changed         timestamp(6),
+    is_deleted      boolean      default false
+);
+
+alter table m_users
+    owner to admin;
 
 create table m_roles
 (
@@ -106,6 +63,35 @@ create unique index m_roles_id_uindex
 create unique index m_roles_user_id_user_role_uindex
     on m_roles (user_id, user_role);
 
+create table m_bank_account
+(
+    id         bigserial         not null
+        constraint m_bank_account_pk
+            primary key,
+    iban       varchar(100)      not null,
+    amount     bigint  default 0 not null,
+    id_user    bigint            not null
+        constraint m_bank_account_m_users_id_fk
+            references m_users
+            on update cascade on delete cascade,
+    id_bank    bigint            not null
+        constraint m_bank_account_m_banks_id_fk
+            references m_banks
+            on update cascade on delete cascade,
+    created    timestamp(6),
+    changed    timestamp(6),
+    is_deleted boolean default false
+);
+
+alter table m_bank_account
+    owner to admin;
+
+create unique index m_bank_account_iban_uindex
+    on m_bank_account (iban);
+
+create unique index m_bank_account_id_uindex
+    on m_bank_account (id);
+
 create table m_cards
 (
     id                bigserial                                          not null
@@ -117,8 +103,7 @@ create table m_cards
             references m_bank_account
             on update cascade on delete cascade,
     "expiration date" date                                               not null,
-
-        card_type         varchar(100) default 'STANDART'::character varying not null,
+    card_type         varchar(100) default 'STANDART'::character varying not null,
     created           timestamp(6),
     changed           timestamp(6),
     is_deleted        boolean      default false
@@ -155,4 +140,13 @@ alter table m_transactions
 
 create unique index m_transactions_id_uindex
     on m_transactions (id);
+
+create unique index m_users_id_uindex
+    on m_users (id);
+
+create unique index m_users_login_uindex
+    on m_users (login);
+
+create unique index m_users_passport_number_uindex
+    on m_users (passport_number);
 

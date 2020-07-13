@@ -1,24 +1,25 @@
 package by.park.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {
+        "roles"
+})
+@EqualsAndHashCode(exclude = {
+        "roles"
+})
 @Entity
 @Table(name = "m_users")
 public class User implements Serializable {
@@ -43,7 +44,7 @@ public class User implements Serializable {
     @Column
     private String password;
 
-    @Column(name ="passport_number")
+    @Column(name = "passport_number")
     private String passportNumber;
 
     @Column
@@ -52,6 +53,10 @@ public class User implements Serializable {
     @Column
     private Timestamp changed;
 
-    @Column(name ="is_deleted")
+    @Column(name = "is_deleted")
     private Boolean deleted;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private Set<Role> roles = new HashSet<>();
 }
