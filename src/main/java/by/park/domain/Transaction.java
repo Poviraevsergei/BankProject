@@ -5,7 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 
 @Setter
@@ -26,8 +33,9 @@ public class Transaction {
     @Column
     private Long count;
 
-    @Column(name = "id_bank_account")
-    private Long idBankAccount;
+    @ManyToOne
+    @JoinColumn(name = "id_bank_account")
+    private BankAccount idBankAccount;
 
     @Column(name = "transaction_time")
     private Timestamp transactionTime;
@@ -39,5 +47,5 @@ public class Transaction {
     private Timestamp changed;
 
     @Column(name = "is_deleted")
-    private Boolean isDeleted;
+    private Boolean deleted;
 }

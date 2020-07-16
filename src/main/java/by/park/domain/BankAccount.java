@@ -1,11 +1,23 @@
 package by.park.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -23,20 +35,30 @@ public class BankAccount {
     private String iban;
 
     @Column
-    private String amount;
+    private Long amount;
 
-    @Column(name = "id_user")
-    private String idUser;
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "id_user")
+    private User idUser;
 
-    @Column(name = "id_bank")
-    private String idBank;
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "id_bank")
+    private Bank idBank;
 
     @Column
-    private String created;
+    private Timestamp created;
 
     @Column
-    private String changed;
+    private Timestamp changed;
 
     @Column(name = "is_deleted")
-    private String deleted;
+    private Boolean deleted;
+
+    @OneToMany(mappedBy = "idBankAccount")
+    private Set<Card> cards = new HashSet<>();
+
+    @OneToMany(mappedBy = "idBankAccount")
+    private Set<Transaction> transactions = new HashSet<>();
 }

@@ -5,7 +5,16 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.TemporalType;
+import javax.persistence.Temporal;
+import javax.persistence.Table;
+import javax.persistence.JoinColumn;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -24,8 +33,9 @@ public class Card {
     @Column(name = "card_number")
     private String cardNumber;
 
-    @Column(name = "id_bank_account")
-    private Long idBankAccount;
+    @ManyToOne
+    @JoinColumn(name = "id_bank_account")
+    private BankAccount idBankAccount;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "expiration_date")
