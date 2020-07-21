@@ -21,15 +21,16 @@ public class UpdateUserRequest {
 
     @ApiModelProperty(required = true, dataType = "long", notes = "user id")
     private Long id;
-    @NotNull
-    @NotEmpty
-    @Size(min = 5, max = 100)
-    @ApiModelProperty(required = true, dataType = "string", notes = "user first name")
-    private String userName;
 
     @NotNull
     @NotEmpty
-    @Size(min = 5, max = 100)
+    @Size(min = 3, max = 100)
+    @ApiModelProperty(required = true, dataType = "string", notes = "user first name")
+    private String username;
+
+    @NotNull
+    @NotEmpty
+    @Size(min = 3, max = 100)
     @ApiModelProperty(required = true, dataType = "string", notes = "user second name")
     private String surname;
 
@@ -38,13 +39,13 @@ public class UpdateUserRequest {
 
     @NotNull
     @NotEmpty
-    @Size(min = 5, max = 100)
+    @Size(min = 3, max = 100)
     @ApiModelProperty(required = true, dataType = "string", notes = "user login")
     private String login;
 
     @NotNull
     @NotEmpty
-    @Size(min = 5, max = 100)
+    @Size(min = 3, max = 100)
     @ApiModelProperty(required = true, dataType = "string", notes = "user password")
     private String password;
 

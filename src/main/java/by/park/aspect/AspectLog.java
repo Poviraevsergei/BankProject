@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class AspectLog {
     private static final Logger log = Logger.getLogger(AspectLog.class);
 
-    @Pointcut("execution(* by.park.dao.repository.UserRepository.*(..))")
+    @Pointcut("execution(* by.park.domain.*.*(..))")
     public void aroundRepositoryPointcut() {
     }
 

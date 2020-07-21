@@ -20,13 +20,13 @@ import java.util.Date;
 public class CreateUserRequest {
     @NotNull
     @NotEmpty
-    @Size(min = 5, max = 100)
+    @Size(min = 3, max = 100)
     @ApiModelProperty(required = true, dataType = "string", notes = "user first name")
-    private String userName;
+    private String username;
 
     @NotNull
     @NotEmpty
-    @Size(min = 5, max = 100)
+    @Size(min = 3, max = 100)
     @ApiModelProperty(required = true, dataType = "string", notes = "user second name")
     private String surname;
 
@@ -35,13 +35,13 @@ public class CreateUserRequest {
 
     @NotNull
     @NotEmpty
-    @Size(min = 5, max = 100)
+    @Size(min = 3, max = 100)
     @ApiModelProperty(required = true, dataType = "string", notes = "user login")
     private String login;
 
     @NotNull
     @NotEmpty
-    @Size(min = 5, max = 100)
+    @Size(min = 3, max = 100)
     @ApiModelProperty(required = true, dataType = "string", notes = "user password")
     private String password;
 
