@@ -12,7 +12,7 @@ public interface BankRepository extends JpaRepository<Bank, Long> {
     Bank findBankByBankName(String bankName);
 
     @Modifying
-    @Query("update Bank b set b.deleted = true where b.id = :id")
+    @Query("delete from Bank b where b.id = :id")
     void deleteBankById(@Param("id") Long id);
 
     Bank findBankByBankCode(String bankCode);

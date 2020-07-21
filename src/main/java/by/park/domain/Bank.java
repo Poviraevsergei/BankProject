@@ -51,9 +51,6 @@ public class Bank {
     @Column
     private Timestamp changed;
 
-    @Column(name = "is_deleted")
-    private Boolean deleted;
-
     @JsonManagedReference
     @OneToMany(mappedBy = "idBank", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<BankAccount> bankAccounts = new HashSet<>();

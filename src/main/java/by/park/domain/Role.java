@@ -16,7 +16,6 @@ import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
-import java.sql.Timestamp;
 
 @Setter
 @Getter
@@ -43,13 +42,4 @@ public class Role {
 
     @Column(name = "user_role")
     private String userRole;
-
-    @Column
-    private Timestamp created;
-
-    @Column
-    private Timestamp changed;
-
-    @Column(name = "is_deleted")
-    private Boolean deleted;
 }

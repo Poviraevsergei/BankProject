@@ -49,7 +49,6 @@ public class BankServiceImpl implements BankService {
         bank.setBankCode(createBankRequest.getBankCode());
         bank.setCreated(new Timestamp(new Date().getTime()));
         bank.setChanged(new Timestamp(new Date().getTime()));
-        bank.setDeleted(false);
         return bankRepository.save(bank);
     }
 
@@ -64,7 +63,6 @@ public class BankServiceImpl implements BankService {
         bank.setBankCode(updateBankRequest.getBankCode());
         bank.setCreated(oldBank.get().getCreated());
         bank.setChanged(new Timestamp(new Date().getTime()));
-        bank.setDeleted(updateBankRequest.getDeleted());
         return bankRepository.save(bank);
     }
 

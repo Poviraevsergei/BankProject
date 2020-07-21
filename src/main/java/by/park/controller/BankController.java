@@ -4,7 +4,15 @@ import by.park.controller.request.CreateBankRequest;
 import by.park.controller.request.UpdateBankRequest;
 import by.park.domain.Bank;
 import by.park.service.BankService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -25,7 +33,7 @@ public class BankController {
         return bankService.findBankById(id);
     }
 
-    @GetMapping("/code")
+    @GetMapping("/find-bank-by-code")
     Bank findBankByBankCode(@RequestParam("code") String bankCode) {
         return bankService.findBankByBankCode(bankCode);
     }
@@ -45,13 +53,13 @@ public class BankController {
         return bankService.updateBank(updateBankRequest);
     }
 
-    @DeleteMapping
-    void deleteBankById(Long id) {
-        bankService.deleteBankById(id);
-    }
-
-    @GetMapping("/name")
+    @GetMapping("/find-bank-by-name")
     public Bank findBankByName(@RequestParam("name") String bankName) {
         return bankService.findBankByName(bankName);
+    }
+
+    @DeleteMapping
+    public void deleteBankById(Long id) {
+        bankService.deleteBankById(id);
     }
 }
