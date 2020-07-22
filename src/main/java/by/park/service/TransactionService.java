@@ -14,7 +14,7 @@ public interface TransactionService {
 
     List<Transaction> findTransactionsByType(String type);
 
-    Transaction paying(@RequestBody CreateTransactionRequest createTransactionRequest);
+    Transaction paying(CreateTransactionRequest createTransactionRequest);
 
     Transaction transfer(int count,Long fromIdBankAccount, Long toIdBankAccount);
 

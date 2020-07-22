@@ -106,7 +106,7 @@ public class BankController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "Deleting user")
+    @ApiOperation(value = "Deleting bank")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Bank was deleted"),
             @ApiResponse(code = 204, message = "Bank was deleted"),
