@@ -50,4 +50,10 @@ public class CreateUserRequest {
     @Size(min = 10, max = 50)
     @ApiModelProperty(required = true, dataType = "string", notes = "user passport number")
     private String passportNumber;
+
+    @NotNull
+    @NotEmpty
+    @Size(min = 3, max = 50)
+    @ApiModelProperty(required = true, dataType = "string", notes = "bank that user used")
+    private String bankName;
 }

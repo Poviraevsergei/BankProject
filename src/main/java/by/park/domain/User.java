@@ -30,10 +30,10 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = {
-        "roles"
+        "roles", "bankAccounts"
 })
 @EqualsAndHashCode(exclude = {
-        "roles"
+        "roles", "bankAccounts"
 })
 @Entity
 @Table(name = "m_users")
@@ -76,6 +76,6 @@ public class User implements Serializable {
     private Set<Role> roles = new HashSet<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "idUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<BankAccount> bankAccounts = new HashSet<>();
 }

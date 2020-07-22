@@ -68,10 +68,10 @@ public class UserController {
     }
 
     @PostMapping
-    @ApiOperation(value = "Saving user")
+    @ApiOperation(value = "Registrating user")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful user creating"),
-            @ApiResponse(code = 201, message = "Successful user creating"),
+            @ApiResponse(code = 200, message = "Successful user registrarion"),
+            @ApiResponse(code = 201, message = "Successful user registrarion"),
             @ApiResponse(code = 401, message = "Don't have authorization"),
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
@@ -96,8 +96,8 @@ public class UserController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Deleting user")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful user deleting"),
-            @ApiResponse(code = 204, message = "Successful user deleting"),
+            @ApiResponse(code = 200, message = "User was deleted"),
+            @ApiResponse(code = 204, message = "User was deleted"),
             @ApiResponse(code = 401, message = "Don't have authorization"),
             @ApiResponse(code = 403, message = "Don't have authority"),
     })

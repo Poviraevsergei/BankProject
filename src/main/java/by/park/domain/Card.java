@@ -1,9 +1,7 @@
 package by.park.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,13 +13,18 @@ import javax.persistence.TemporalType;
 import javax.persistence.Temporal;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
-import java.sql.Timestamp;
 import java.util.Date;
 
 @Setter
 @Getter
-@ToString
-@EqualsAndHashCode
+@ToString(exclude = {
+        "idBankAccount"
+})
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(exclude = {
+        "idBankAccount"
+})
 @Entity
 @Table(name = "m_cards")
 public class Card {
@@ -33,6 +36,7 @@ public class Card {
     @Column(name = "card_number")
     private String cardNumber;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "id_bank_account")
     private BankAccount idBankAccount;
@@ -43,13 +47,4 @@ public class Card {
 
     @Column(name = "card_type")
     private String cardType;
-
-    @Column
-    private Timestamp created;
-
-    @Column
-    private Timestamp changed;
-
-    @Column(name = "is_deleted")
-    private Boolean deleted;
 }

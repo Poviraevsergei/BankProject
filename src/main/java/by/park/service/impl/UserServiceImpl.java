@@ -2,12 +2,19 @@ package by.park.service.impl;
 
 import by.park.controller.request.CreateUserRequest;
 import by.park.controller.request.UpdateUserRequest;
+import by.park.domain.BankAccount;
+import by.park.domain.Card;
+import by.park.domain.Cards;
+import by.park.domain.Roles;
+import by.park.domain.Role;
 import by.park.domain.User;
+import by.park.repository.BankRepository;
 import by.park.repository.UserRepository;
 import by.park.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -16,9 +23,11 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
+    BankRepository bankRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, BankRepository bankRepository) {
         this.userRepository = userRepository;
+        this.bankRepository = bankRepository;
     }
 
     @Override
@@ -48,6 +57,25 @@ public class UserServiceImpl implements UserService {
         user.setDeleted(false);
         user.setPassword(createUserRequest.getPassword());
         user.setPassportNumber(createUserRequest.getPassportNumber());
+
+        Role role = new Role();
+        role.setUserRole(Roles.ROLE_USER.name());
+        role.setUserId(user);
+        user.setRoles(Collections.singleton(role));
+        BankAccount bankAccount = new BankAccount();
+        bankAccount.setAmount(0L);
+        bankAccount.setIban(createIBAN(bankRepository.findBankByBankName(createUserRequest.getBankName()).getBankCode()));
+        bankAccount.setUserId(user);
+        bankAccount.setCreated(new Timestamp(new Date().getTime()));
+        bankAccount.setChanged(new Timestamp(new Date().getTime()));
+        bankAccount.setIdBank(bankRepository.findBankByBankName(createUserRequest.getBankName()));
+        Card card = new Card();
+        card.setCardType(Cards.DEBIT.name());
+        card.setCardNumber(createCardNumber());
+        card.setExpirationDate(new Timestamp(new Date().getTime()));
+        card.setIdBankAccount(bankAccount);
+        bankAccount.setCards(Collections.singleton(card));
+        user.setBankAccounts(Collections.singleton(bankAccount));
         return userRepository.save(user);
     }
 
@@ -71,5 +99,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(Long id) {
         userRepository.deleteUserById(id);
+    }
+
+    private static String createCardNumber() {
+        String result = "";
+        for (int i = 0; i < 4; i++) {
+            result = result + (int) (1000 + Math.random() * 8999);
+            if (i != 3) {
+                result = result + " ";
+            }
+        }
+        return result;
+    }
+
+    private static String createIBAN(String bankCode) {
+        String result = "BY20 " + bankCode + " ";
+        for (int i = 0; i < 5; i++) {
+            result = result + (int) (1000 + Math.random() * 8999);
+            if (i != 4) {
+                result = result + " ";
+            }
+        }
+        return result;
     }
 }

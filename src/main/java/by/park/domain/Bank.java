@@ -21,12 +21,16 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
 @Setter
-@EqualsAndHashCode
-@ToString
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {
+        "bankAccounts"
+})
+@EqualsAndHashCode(exclude = {
+        "bankAccounts"
+})
 @Entity
 @Table(name = "m_banks")
 

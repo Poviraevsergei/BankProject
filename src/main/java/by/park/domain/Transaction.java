@@ -39,13 +39,4 @@ public class Transaction {
 
     @Column(name = "transaction_time")
     private Timestamp transactionTime;
-
-    @Column
-    private Timestamp created;
-
-    @Column
-    private Timestamp changed;
-
-    @Column(name = "is_deleted")
-    private Boolean deleted;
 }

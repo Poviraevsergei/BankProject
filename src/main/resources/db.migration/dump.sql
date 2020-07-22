@@ -5,7 +5,7 @@ create table if not exists m_banks
             primary key,
     bank_name varchar(100) default 'DEFAULT_NAME'::character varying not null,
     phone_number varchar(100) not null,
-    bank_code varchar(100) not null,
+    bank_code varchar(3) not null,
     created timestamp(6),
     changed timestamp(6)
 );
@@ -72,8 +72,7 @@ create table if not exists m_bank_account
             references m_banks
             on update cascade on delete cascade,
     created timestamp(6),
-    changed timestamp(6),
-    is_deleted boolean default false
+    changed timestamp(6)
 );
 
 alter table m_bank_account owner to admin;
@@ -95,10 +94,7 @@ create table if not exists m_cards
             references m_bank_account
             on update cascade on delete cascade,
     expiration_date date not null,
-    card_type varchar(100) default 'STANDART'::character varying not null,
-    created timestamp(6),
-    changed timestamp(6),
-    is_deleted boolean default false
+    card_type varchar(100) default 'STANDART'::character varying not null
 );
 
 alter table m_cards owner to admin;
@@ -120,10 +116,7 @@ create table if not exists m_transactions
         constraint m_transactions_m_bank_account_id_fk
             references m_bank_account
             on update cascade on delete cascade,
-    transaction_time timestamp(6) not null,
-    created timestamp(6),
-    changed timestamp(6),
-    is_deleted boolean default false
+    transaction_time timestamp(6) not null
 );
 
 alter table m_transactions owner to admin;

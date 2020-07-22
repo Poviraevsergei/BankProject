@@ -35,10 +35,7 @@ public class UpdateBankRequest {
 
     @NotNull
     @NotEmpty
-    @Size(min = 3, max = 100)
+    @Size(min = 3, max = 3)
     @ApiModelProperty(required = true, dataType = "string", notes = "bank code")
     private String bankCode;
-
-    @ApiModelProperty(required = true, dataType = "boolean", notes = "deleted bank or not")
-    private Boolean deleted;
 }
