@@ -2,7 +2,6 @@ package by.park.service.impl;
 
 import by.park.controller.request.CreateTransactionRequest;
 import by.park.domain.BankAccount;
-import by.park.domain.Card;
 import by.park.domain.Transaction;
 import by.park.repository.BankAccountRepository;
 import by.park.repository.CardRepository;
@@ -11,6 +10,8 @@ import by.park.service.TransactionService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,34 +35,40 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Transaction> findTransactionsByType(String type) {
-        return transactionRepository.findAllByTypeOfTransaction(type);
+    public String paying(@RequestBody CreateTransactionRequest createTransactionRequest) {
+        BankAccount bankAccount = bankAccountRepository.findBankAccountByIban(createTransactionRequest.getIBANBankAccount());
+        if (bankAccount.getAmount() >= createTransactionRequest.getCount()) {
+            Transaction transaction = new Transaction();
+            transaction.setTypeOfTransaction(createTransactionRequest.getTypeOfTransaction());
+            transaction.setTransactionTime(new Timestamp(new Date().getTime()));
+            transaction.setCount(createTransactionRequest.getCount());
+            transaction.setIdBankAccount(bankAccountRepository.findBankAccountByIban(createTransactionRequest.getIBANBankAccount()));
+            bankAccount.setAmount(bankAccount.getAmount() - createTransactionRequest.getCount());
+            transactionRepository.save(transaction);
+            return "Payment completed successfully";
+        }
+        return "There was a problem with payment";
+
     }
 
     @Override
-    public Transaction paying(@RequestBody CreateTransactionRequest createTransactionRequest) {
-        Transaction transaction = new Transaction();
-        Optional<BankAccount> bankAccount = bankAccountRepository.findById(createTransactionRequest.getIdBankAccount());
-        if (bankAccount.get().getAmount() >= createTransactionRequest.getCount()) {
-            bankAccount.get().setAmount(bankAccount.get().getAmount() - createTransactionRequest.getCount());
-        }
-        transaction.setTypeOfTransaction(createTransactionRequest.getTypeOfTransaction());
-        return transaction;
-    }
-
-    @Override
-    public Transaction transfer(int count, Long fromIdBankAccount, Long toIdBankAccount) {
-        Transaction transaction = new Transaction();
-        transaction.setTypeOfTransaction("transfer from BankAccount id=" + fromIdBankAccount + " to BankAccount id=" + toIdBankAccount);
-        if (bankAccountRepository.findById(fromIdBankAccount).get().getAmount() > count) {
-            bankAccountRepository.findById(toIdBankAccount).get().setAmount(
-                    bankAccountRepository.findById(toIdBankAccount).get().getAmount() + count
+    public String transfer(long count, String fromIBANBankAccount, String toIBANBankAccount) {
+        if (bankAccountRepository.findBankAccountByIban(fromIBANBankAccount).getAmount() >= count) {
+            Transaction transaction = new Transaction();
+            bankAccountRepository.findBankAccountByIban(fromIBANBankAccount).setAmount(
+                    bankAccountRepository.findBankAccountByIban(fromIBANBankAccount).getAmount() - count
             );
-            bankAccountRepository.findById(fromIdBankAccount).get().setAmount(
-                    bankAccountRepository.findById(fromIdBankAccount).get().getAmount() - count
+            bankAccountRepository.findBankAccountByIban(toIBANBankAccount).setAmount(
+                    bankAccountRepository.findBankAccountByIban(toIBANBankAccount).getAmount() + count
             );
+            transaction.setTypeOfTransaction("transfer money from " + fromIBANBankAccount + " to " + toIBANBankAccount);
+            transaction.setCount(count);
+            transaction.setIdBankAccount(bankAccountRepository.findBankAccountByIban(fromIBANBankAccount));
+            transaction.setTransactionTime(new Timestamp(new Date().getTime()));
+            transactionRepository.save(transaction);
+            return "Money transfer was successful!";
         }
-        return null;
+        return "There was a problem with money transfer";
     }
 
     @Override

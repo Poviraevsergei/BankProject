@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static by.park.util.MethodsForCreating.createIBAN;
+
 @Service
 public class BankAccountServiceImpl implements BankAccountService {
 
@@ -47,13 +49,13 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     public BankAccount createBankAccount(CreateBankAccountRequest createBankAccountRequest) {
         BankAccount bankAccount = new BankAccount();
-        bankAccount.setIban(createBankAccountRequest.getIBAN());
+        Optional<Bank> bank = bankRepository.findById(createBankAccountRequest.getIdBank());
+        bankAccount.setIban(createIBAN(bank.get().getBankCode()));
         bankAccount.setAmount(createBankAccountRequest.getAmount());
         bankAccount.setCreated(new Timestamp(new Date().getTime()));
         bankAccount.setChanged(new Timestamp(new Date().getTime()));
         Optional<User> user = userRepository.findById(createBankAccountRequest.getIdUser());
         bankAccount.setUserId(user.get());
-        Optional<Bank> bank = bankRepository.findById(createBankAccountRequest.getIdBank());
         bankAccount.setIdBank(bank.get());
         return bankAccountRepository.save(bankAccount);
     }

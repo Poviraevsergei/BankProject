@@ -1,9 +1,7 @@
 package by.park.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,8 +15,14 @@ import java.sql.Timestamp;
 
 @Setter
 @Getter
-@ToString
-@EqualsAndHashCode
+@ToString(exclude = {
+        "idBankAccount"
+})
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(exclude = {
+        "idBankAccount"
+})
 @Entity
 @Table(name = "m_transactions")
 public class Transaction {
@@ -33,6 +37,7 @@ public class Transaction {
     @Column
     private Long count;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "id_bank_account")
     private BankAccount idBankAccount;

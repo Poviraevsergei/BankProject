@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
@@ -34,6 +33,6 @@ public class CreateTransactionRequest {
     @NotNull
     @NotEmpty
     @Size(min = 1, max = 100)
-    @ApiModelProperty(required = true, dataType = "long", notes = "bank account id")
-    private Long idBankAccount;
+    @ApiModelProperty(required = true, dataType = "long", notes = "bank account IBAN")
+    private String IBANBankAccount;
 }

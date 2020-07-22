@@ -1,7 +1,6 @@
 package by.park.service.impl;
 
 import by.park.controller.request.CreateCardRequest;
-import by.park.controller.request.UpdateBankRequest;
 import by.park.controller.request.UpdateCardRequest;
 import by.park.domain.BankAccount;
 import by.park.domain.Card;

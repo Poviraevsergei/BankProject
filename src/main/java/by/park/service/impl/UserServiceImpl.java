@@ -19,6 +19,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static by.park.util.MethodsForCreating.createCardNumber;
+import static by.park.util.MethodsForCreating.createIBAN;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -101,25 +104,5 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteUserById(id);
     }
 
-    private static String createCardNumber() {
-        String result = "";
-        for (int i = 0; i < 4; i++) {
-            result = result + (int) (1000 + Math.random() * 8999);
-            if (i != 3) {
-                result = result + " ";
-            }
-        }
-        return result;
-    }
 
-    private static String createIBAN(String bankCode) {
-        String result = "BY20 " + bankCode + " ";
-        for (int i = 0; i < 5; i++) {
-            result = result + (int) (1000 + Math.random() * 8999);
-            if (i != 4) {
-                result = result + " ";
-            }
-        }
-        return result;
-    }
 }

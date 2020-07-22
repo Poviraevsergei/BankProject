@@ -20,14 +20,8 @@ public class CreateBankAccountRequest {
 
     @NotEmpty
     @NotNull
-    @Size(min = 33,max = 33)
-    @ApiModelProperty(dataType = "string",required = true,notes = "bank IBAN")
-    private String IBAN;
-
-    @NotEmpty
-    @NotNull
-    @Size(min = 33,max = 33)
-    @ApiModelProperty(dataType = "long",required = true,notes = "amount money on bank acccount")
+    @Size(min = 33, max = 33)
+    @ApiModelProperty(dataType = "long", required = true, notes = "amount money on bank acccount")
     private Long amount;
 
     @NotNull
