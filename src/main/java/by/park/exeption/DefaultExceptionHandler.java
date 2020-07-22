@@ -15,14 +15,14 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorMessage> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error(e.getMessage(), e);
-        return new ResponseEntity<>(new ErrorMessage(1L, e.getLocalizedMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
+        return new ResponseEntity<>(new ErrorMessage(e.getLocalizedMessage(), e), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleOthersException(Exception e) {
         log.error(e.getMessage(), e);
         log.info(e.getMessage(), e);
-        return new ResponseEntity<>(new ErrorMessage(e.getMessage()),
+        return new ResponseEntity<>(new ErrorMessage(e.getMessage(), e),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

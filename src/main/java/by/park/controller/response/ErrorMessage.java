@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ErrorMessage {
-    private Long errorCode;
-
     private String message;
+
+    private Throwable throwable;
 
     public ErrorMessage(String message) {
         this.message = message;

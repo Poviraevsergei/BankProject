@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +55,7 @@ public class CardController {
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
     })
-    Card createCard(CreateCardRequest createCardRequest) {
+    Card createCard(@Valid @RequestBody CreateCardRequest createCardRequest) {
         return cardService.createCard(createCardRequest);
     }
 
@@ -67,7 +68,7 @@ public class CardController {
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
     })
-    Card updateCard(UpdateCardRequest updateCardRequest) {
+    Card updateCard(@Valid @RequestBody UpdateCardRequest updateCardRequest) {
         return cardService.updateCard(updateCardRequest);
     }
 

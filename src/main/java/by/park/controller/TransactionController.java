@@ -5,6 +5,7 @@ import by.park.domain.Transaction;
 import by.park.service.TransactionService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ public class TransactionController {
     }
 
     @PostMapping
-    String paying(CreateTransactionRequest createTransactionRequest) {
+    String paying(@Valid @RequestBody CreateTransactionRequest createTransactionRequest) {
         return transactionService.paying(createTransactionRequest);
     }
 
