@@ -1,6 +1,7 @@
 package by.park.controller;
 
-import by.park.controller.request.CreateTransactionRequest;
+import by.park.controller.request.PayingTransactionRequest;
+import by.park.controller.request.TransferTransactionalRequest;
 import by.park.domain.Transaction;
 import by.park.service.TransactionService;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +32,13 @@ public class TransactionController {
     }
 
     @PostMapping
-    String paying(@Valid @RequestBody CreateTransactionRequest createTransactionRequest) {
-        return transactionService.paying(createTransactionRequest);
+    String paying(@Valid @RequestBody PayingTransactionRequest payingTransactionRequest) {
+        return transactionService.paying(payingTransactionRequest);
     }
 
     @PutMapping
-    String transfer(int count, String fromIBANBankAccount, String toIBANBankAccount) {
-        return transactionService.transfer(count, fromIBANBankAccount, toIBANBankAccount);
+    String transfer(@Valid @RequestBody TransferTransactionalRequest transferTransactionalRequest) {
+        return transactionService.transfer(transferTransactionalRequest);
     }
 
     @DeleteMapping

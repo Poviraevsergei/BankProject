@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -21,15 +22,14 @@ public class UpdateCardRequest {
 
     @ApiModelProperty(required = true, dataType = "long", notes = "card id")
     private long id;
-    @NotNull
-    @NotEmpty
-    @Size(min = 19, max = 100)
-    @ApiModelProperty(required = true, dataType = "string", notes = "card number")
-    private String cardNumber;
 
     @NotNull
     @NotEmpty
-    @Size(min = 1, max = 100)
+    @Size(min = 19, max = 19)
+    @ApiModelProperty(required = true, dataType = "string", notes = "card number")
+    private String cardNumber;
+
+    @Min(1)
     @ApiModelProperty(required = true, dataType = "long", notes = "bank id")
     private Long idBankAccount;
 

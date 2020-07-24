@@ -23,8 +23,8 @@ create table if not exists m_users
     id bigserial not null
         constraint m_users_pk
             primary key,
-    username varchar(100) default 'DEFAULT_NAME'::character varying not null,
-    surname varchar(100) default 'DEFAULT_NAME'::character varying not null,
+    firstname varchar(100) default 'DEFAULT_NAME'::character varying not null,
+    lastname varchar(100) default 'DEFAULT_NAME'::character varying not null,
     birth_date date not null,
     login varchar(100) not null,
     password varchar(100) not null,

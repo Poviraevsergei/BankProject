@@ -38,6 +38,11 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    public Card findByCardnumber(String cardNumber) {
+        return cardRepository.findByCardNumber(cardNumber);
+    }
+
+    @Override
     public Card createCard(CreateCardRequest createCardRequest) {
         Card card = new Card();
         Optional<BankAccount> bankAccount = bankAccountRepository.findById(createCardRequest.getIdBankAccount());
@@ -49,16 +54,15 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public Card updateCard(@RequestBody UpdateCardRequest updateCardRequest) {
-
-        Card card = new Card();
-        card.setId(updateCardRequest.getId());
-        Optional<BankAccount> bankAccount = bankAccountRepository.findById(updateCardRequest.getIdBankAccount());
-        card.setCardNumber(updateCardRequest.getCardNumber());
-        card.setIdBankAccount(bankAccount.get());
-        card.setExpirationDate(cardRepository.findById(updateCardRequest.getId()).get().getExpirationDate());
-        card.setCardType(updateCardRequest.getCardType());
-        return cardRepository.save(card);
+    public Card updateCard(UpdateCardRequest updateCardRequest) {
+            Card card = new Card();
+            card.setId(updateCardRequest.getId());
+            Optional<BankAccount> bankAccount = bankAccountRepository.findById(updateCardRequest.getIdBankAccount());
+            card.setCardNumber(updateCardRequest.getCardNumber());
+            card.setIdBankAccount(bankAccount.get());
+            card.setExpirationDate(cardRepository.findById(updateCardRequest.getId()).get().getExpirationDate());
+            card.setCardType(updateCardRequest.getCardType());
+            return cardRepository.save(card);
     }
 
     @Override

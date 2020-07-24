@@ -7,16 +7,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ApiModel("Transaction creation model")
-public class CreateTransactionRequest {
+@ApiModel("Transaction paying model")
+public class PayingTransactionRequest {
 
     @NotNull
     @NotEmpty
@@ -24,15 +22,14 @@ public class CreateTransactionRequest {
     @ApiModelProperty(required = true, dataType = "string", notes = "transaction type")
     private String typeOfTransaction;
 
-    @NotNull
-    @NotEmpty
-    @Size(min = 1, max = 100)
+
+    @Min(1)
     @ApiModelProperty(required = true, dataType = "long", notes = "count")
     private Long count;
 
     @NotNull
     @NotEmpty
-    @Size(min = 1, max = 100)
-    @ApiModelProperty(required = true, dataType = "long", notes = "bank account IBAN")
-    private String IBANBankAccount;
+    @Size(min = 19, max = 19)
+    @ApiModelProperty(required = true, dataType = "long", notes = "card number")
+    private String cardNumber;
 }

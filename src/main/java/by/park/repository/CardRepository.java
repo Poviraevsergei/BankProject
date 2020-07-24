@@ -14,4 +14,6 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     @Modifying
     @Query("delete from Card c where c.id = :id")
     void deleteCardById(@Param("id") Long id);
+
+    Card findByCardNumber(String cardNumber);
 }

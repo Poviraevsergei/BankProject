@@ -11,26 +11,27 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ApiModel("Card creation model")
-public class CreateCardRequest {
+@ApiModel("Transaction money transfer model")
+public class TransferTransactionalRequest {
+
+    @Min(1)
+    @ApiModelProperty(required = true, dataType = "long", notes = "count for transfer")
+    long count;
 
     @NotNull
     @NotEmpty
     @Size(min = 19, max = 19)
-    @ApiModelProperty(required = true, dataType = "string", notes = "card number")
-    private String cardNumber;
+    @ApiModelProperty(required = true, dataType = "string", notes = "card from take money")
+    String fromCardNumber;
 
-    @Min(1)
-    @ApiModelProperty(required = true, dataType = "long", notes = "bank id")
-    private Long idBankAccount;
-
-    @Size(min = 4, max = 100)
-    @ApiModelProperty(required = true, dataType = "string", notes = "card type")
-    private String cardType;
+    @NotNull
+    @NotEmpty
+    @Size(min = 19, max = 19)
+    @ApiModelProperty(required = true, dataType = "string", notes = "card to give money")
+    String toCardNumber;
 }

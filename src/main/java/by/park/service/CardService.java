@@ -12,9 +12,12 @@ public interface CardService {
 
     Optional<Card> findCardById(Long id);
 
+    Card findByCardnumber(String cardNumber);
+
     Card createCard(CreateCardRequest createCardRequest);
 
     Card updateCard(UpdateCardRequest updateCardRequest);
 
     void deleteCardById(Long id);
+
 }

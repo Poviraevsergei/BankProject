@@ -1,6 +1,7 @@
 package by.park.service;
 
-import by.park.controller.request.CreateTransactionRequest;
+import by.park.controller.request.PayingTransactionRequest;
+import by.park.controller.request.TransferTransactionalRequest;
 import by.park.domain.Transaction;
 
 
@@ -13,9 +14,9 @@ public interface TransactionService {
 
     Optional<Transaction> findTransactionById(Long id);
 
-    String paying(CreateTransactionRequest createTransactionRequest);
+    String paying(PayingTransactionRequest payingTransactionRequest);
 
-    String transfer(long count, String fromIBANBankAccount, String toIBANBankAccount);
+    String transfer(TransferTransactionalRequest transferTransactionalRequest);
 
     void deleteTransactionById(Long id);
 }

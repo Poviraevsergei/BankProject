@@ -1,6 +1,7 @@
 package by.park.service.impl;
 
-import by.park.controller.request.CreateTransactionRequest;
+import by.park.controller.request.PayingTransactionRequest;
+import by.park.controller.request.TransferTransactionalRequest;
 import by.park.domain.BankAccount;
 import by.park.domain.Transaction;
 import by.park.repository.BankAccountRepository;
@@ -8,7 +9,6 @@ import by.park.repository.CardRepository;
 import by.park.repository.TransactionRepository;
 import by.park.service.TransactionService;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -35,15 +35,17 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public String paying(@RequestBody CreateTransactionRequest createTransactionRequest) {
-        BankAccount bankAccount = bankAccountRepository.findBankAccountByIban(createTransactionRequest.getIBANBankAccount());
-        if (bankAccount.getAmount() >= createTransactionRequest.getCount()) {
+    public String paying(PayingTransactionRequest payingTransactionRequest) {
+        Optional<BankAccount> bankAccount = bankAccountRepository.findById(
+                cardRepository.findByCardNumber(payingTransactionRequest.getCardNumber()).getIdBankAccount().getId()
+        );
+        if (bankAccount.get().getAmount() >= payingTransactionRequest.getCount()) {
             Transaction transaction = new Transaction();
-            transaction.setTypeOfTransaction(createTransactionRequest.getTypeOfTransaction());
+            transaction.setTypeOfTransaction(payingTransactionRequest.getTypeOfTransaction());
             transaction.setTransactionTime(new Timestamp(new Date().getTime()));
-            transaction.setCount(createTransactionRequest.getCount());
-            transaction.setIdBankAccount(bankAccountRepository.findBankAccountByIban(createTransactionRequest.getIBANBankAccount()));
-            bankAccount.setAmount(bankAccount.getAmount() - createTransactionRequest.getCount());
+            transaction.setCount(payingTransactionRequest.getCount());
+            transaction.setIdBankAccount(bankAccount.get());
+            bankAccount.get().setAmount(bankAccount.get().getAmount() - payingTransactionRequest.getCount());
             transactionRepository.save(transaction);
             return "Payment completed successfully";
         }
@@ -52,18 +54,18 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public String transfer(long count, String fromIBANBankAccount, String toIBANBankAccount) {
-        if (bankAccountRepository.findBankAccountByIban(fromIBANBankAccount).getAmount() >= count) {
+    public String transfer(TransferTransactionalRequest transfer) {
+        Optional<BankAccount> bankAccountFrom = bankAccountRepository.findById(cardRepository.findByCardNumber(transfer.getFromCardNumber()).getIdBankAccount().getId());
+        Optional<BankAccount> bankAccountTo = bankAccountRepository.findById(cardRepository.findByCardNumber(transfer.getToCardNumber()).getIdBankAccount().getId());
+        if (bankAccountFrom.get().getAmount() >= transfer.getCount()) {
             Transaction transaction = new Transaction();
-            bankAccountRepository.findBankAccountByIban(fromIBANBankAccount).setAmount(
-                    bankAccountRepository.findBankAccountByIban(fromIBANBankAccount).getAmount() - count
-            );
-            bankAccountRepository.findBankAccountByIban(toIBANBankAccount).setAmount(
-                    bankAccountRepository.findBankAccountByIban(toIBANBankAccount).getAmount() + count
-            );
-            transaction.setTypeOfTransaction("transfer money from " + fromIBANBankAccount + " to " + toIBANBankAccount);
-            transaction.setCount(count);
-            transaction.setIdBankAccount(bankAccountRepository.findBankAccountByIban(fromIBANBankAccount));
+            bankAccountFrom.get().setAmount(
+                    bankAccountFrom.get().getAmount() - transfer.getCount());
+            bankAccountTo.get().setAmount(
+                    bankAccountTo.get().getAmount() + transfer.getCount());
+            transaction.setTypeOfTransaction("transfer money from " + transfer.getFromCardNumber() + " to " + transfer.getToCardNumber());
+            transaction.setCount(transfer.getCount());
+            transaction.setIdBankAccount(bankAccountFrom.get());
             transaction.setTransactionTime(new Timestamp(new Date().getTime()));
             transactionRepository.save(transaction);
             return "Money transfer was successful!";

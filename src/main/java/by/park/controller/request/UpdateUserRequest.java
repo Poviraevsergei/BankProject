@@ -25,14 +25,14 @@ public class UpdateUserRequest {
     @NotNull
     @NotEmpty
     @Size(min = 3, max = 100)
-    @ApiModelProperty(required = true, dataType = "string", notes = "user first name")
-    private String username;
+    @ApiModelProperty(required = true, dataType = "string", notes = "user firstname")
+    private String firstname;
 
     @NotNull
     @NotEmpty
     @Size(min = 3, max = 100)
-    @ApiModelProperty(required = true, dataType = "string", notes = "user second name")
-    private String surname;
+    @ApiModelProperty(required = true, dataType = "string", notes = "user lastname")
+    private String lastname;
 
     @ApiModelProperty(required = true, dataType = "data", notes = "user birthday name")
     private Date birthDate;

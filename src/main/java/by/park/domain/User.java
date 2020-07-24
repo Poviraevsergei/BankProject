@@ -44,10 +44,10 @@ public class User implements Serializable {
     private Long id;
 
     @Column
-    private String username;
+    private String firstname;
 
     @Column
-    private String surname;
+    private String lastname;
 
     @Column(name = "birth_date")
     @Temporal(TemporalType.DATE)

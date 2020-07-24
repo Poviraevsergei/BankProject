@@ -44,15 +44,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public User findUserByUsername(String firstname) {
+        return userRepository.findByFirstname(firstname);
     }
 
     @Override
     public User register(CreateUserRequest createUserRequest) {
         User user = new User();
-        user.setUsername(createUserRequest.getUsername());
-        user.setSurname(createUserRequest.getSurname());
+        user.setFirstname(createUserRequest.getFirstname());
+        user.setLastname(createUserRequest.getLastname());
         user.setBirthDate(createUserRequest.getBirthDate());
         user.setLogin(createUserRequest.getLogin());
         user.setCreated(new Timestamp(new Date().getTime()));
@@ -87,8 +87,8 @@ public class UserServiceImpl implements UserService {
         Optional<User> oldUser = userRepository.findById(updateUserRequest.getId());
         User user = new User();
         user.setId(updateUserRequest.getId());
-        user.setUsername(updateUserRequest.getUsername());
-        user.setSurname(updateUserRequest.getSurname());
+        user.setFirstname(updateUserRequest.getFirstname());
+        user.setLastname(updateUserRequest.getLastname());
         user.setBirthDate(updateUserRequest.getBirthDate());
         user.setLogin(updateUserRequest.getLogin());
         user.setCreated(oldUser.get().getCreated());
