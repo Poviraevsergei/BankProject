@@ -30,6 +30,6 @@ public class PayingTransactionRequest {
     @NotNull
     @NotEmpty
     @Size(min = 19, max = 19)
-    @ApiModelProperty(required = true, dataType = "long", notes = "card number")
+    @ApiModelProperty(required = true, dataType = "string", notes = "card number")
     private String cardNumber;
 }

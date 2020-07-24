@@ -72,12 +72,6 @@ public class UserServiceImpl implements UserService {
         bankAccount.setCreated(new Timestamp(new Date().getTime()));
         bankAccount.setChanged(new Timestamp(new Date().getTime()));
         bankAccount.setIdBank(bankRepository.findBankByBankName(createUserRequest.getBankName()));
-        Card card = new Card();
-        card.setCardType(Cards.DEBIT.name());
-        card.setCardNumber(createCardNumber());
-        card.setExpirationDate(new Timestamp(new Date().getTime()));
-        card.setIdBankAccount(bankAccount);
-        bankAccount.setCards(Collections.singleton(card));
         user.setBankAccounts(Collections.singleton(bankAccount));
         return userRepository.save(user);
     }

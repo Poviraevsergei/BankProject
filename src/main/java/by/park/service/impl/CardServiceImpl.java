@@ -8,12 +8,13 @@ import by.park.repository.BankAccountRepository;
 import by.park.repository.CardRepository;
 import by.park.service.CardService;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static by.park.util.MethodsForCreating.createCardNumber;
 
 @Service
 public class CardServiceImpl implements CardService {
@@ -46,7 +47,7 @@ public class CardServiceImpl implements CardService {
     public Card createCard(CreateCardRequest createCardRequest) {
         Card card = new Card();
         Optional<BankAccount> bankAccount = bankAccountRepository.findById(createCardRequest.getIdBankAccount());
-        card.setCardNumber(createCardRequest.getCardNumber());
+        card.setCardNumber(createCardNumber());
         card.setIdBankAccount(bankAccount.get());
         card.setExpirationDate(new Timestamp(new Date().getTime()));
         card.setCardType(createCardRequest.getCardType());
