@@ -4,6 +4,7 @@ import by.park.controller.request.CreateUserRequest;
 import by.park.controller.request.UpdateUserRequest;
 import by.park.domain.User;
 import by.park.service.UserService;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -39,6 +40,7 @@ public class UserController {
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
     })
+    @ApiImplicitParam(name = "X-Auth_Token",required = true,dataType="string",paramType = "header",value = "token")
     public List<User> findAll() {
         return userService.findAllUsers();
     }
@@ -51,33 +53,22 @@ public class UserController {
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
     })
+    @ApiImplicitParam(name = "X-Auth_Token",required = true,dataType="string",paramType = "header",value = "token")
     public Optional<User> findById(@PathVariable("id") Long id) {
         return userService.findUserById(id);
     }
 
     @GetMapping("/find-by-username")
-    @ApiOperation(value = "Finding user by username")
+    @ApiOperation(value = "Finding user by login")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successful user loading"),
             @ApiResponse(code = 401, message = "Don't have authorization"),
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
     })
-    public User findByUsername(@RequestParam("username") String username) {
-        return userService.findUserByUsername(username);
-    }
-
-    @PostMapping
-    @ApiOperation(value = "Registrating user")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful user registrarion"),
-            @ApiResponse(code = 201, message = "Successful user registrarion"),
-            @ApiResponse(code = 401, message = "Don't have authorization"),
-            @ApiResponse(code = 403, message = "Don't have authority"),
-            @ApiResponse(code = 404, message = "Resource not found")
-    })
-    public User register(@Valid @RequestBody CreateUserRequest createUserRequest) {
-        return userService.register(createUserRequest);
+    @ApiImplicitParam(name = "X-Auth_Token",required = true,dataType="string",paramType = "header",value = "token")
+    public User findByLogin(@RequestParam("login") String login) {
+        return userService.findUserByLogin(login);
     }
 
     @PutMapping
@@ -89,6 +80,7 @@ public class UserController {
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
     })
+    @ApiImplicitParam(name = "X-Auth_Token",required = true,dataType="string",paramType = "header",value = "token")
     public User update(@Valid @RequestBody UpdateUserRequest updateUserRequest) {
         return userService.updateUser(updateUserRequest);
     }
@@ -101,6 +93,7 @@ public class UserController {
             @ApiResponse(code = 401, message = "Don't have authorization"),
             @ApiResponse(code = 403, message = "Don't have authority"),
     })
+    @ApiImplicitParam(name = "X-Auth_Token",required = true,dataType="string",paramType = "header",value = "token")
     public void deleteUser(@PathVariable("id") Long id) {
         userService.deleteUserById(id);
     }

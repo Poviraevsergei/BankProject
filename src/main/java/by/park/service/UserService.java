@@ -13,7 +13,7 @@ public interface UserService {
 
     Optional<User> findUserById(Long id);
 
-    User findUserByUsername(String username);
+    User findUserByLogin(String login);
 
     User register(CreateUserRequest createUserRequest);
 
