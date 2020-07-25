@@ -66,7 +66,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token",required = true,dataType="string",paramType = "header",value = "token")
-    User informationAboutUser(Principal principal){
+    public User informationAboutUser(Principal principal){
         return userService.userInformation(principal);
     }
 

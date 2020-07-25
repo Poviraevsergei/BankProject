@@ -32,7 +32,7 @@ public class BankAccountController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    List<BankAccount> findAll() {
+    public List<BankAccount> findAll() {
         return bankAccountService.findAll();
     }
 
@@ -45,7 +45,7 @@ public class BankAccountController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    BankAccount findById(@PathVariable("id") Long id) {
+    public BankAccount findById(@PathVariable("id") Long id) {
         return bankAccountService.findById(id);
     }
 
@@ -71,7 +71,7 @@ public class BankAccountController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    BankAccount findBankAccountByIban(@RequestParam String IBAN) {
+    public BankAccount findBankAccountByIban(@RequestParam String IBAN) {
         return bankAccountService.findBankAccountByIban(IBAN);
     }
 
@@ -85,7 +85,7 @@ public class BankAccountController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    BankAccount createBankAccount(@Valid @RequestBody CreateBankAccountRequest createBankAccountRequest, Principal principal) {
+    public BankAccount createBankAccount(@Valid @RequestBody CreateBankAccountRequest createBankAccountRequest, Principal principal) {
         return bankAccountService.createBankAccount(createBankAccountRequest, principal);
     }
 
@@ -99,7 +99,7 @@ public class BankAccountController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    BankAccount updateBankAccount(@Valid @RequestBody UpdateBankAccountRequest updateBankAccountRequest) {
+    public BankAccount updateBankAccount(@Valid @RequestBody UpdateBankAccountRequest updateBankAccountRequest) {
         return bankAccountService.updateBankAccount(updateBankAccountRequest);
     }
 
@@ -112,7 +112,7 @@ public class BankAccountController {
             @ApiResponse(code = 403, message = "Don't have authority"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    void deleteBankAccountById(Long id) {
+    public void deleteBankAccountById(Long id) {
         bankAccountService.deleteBankAccountById(id);
     }
 }

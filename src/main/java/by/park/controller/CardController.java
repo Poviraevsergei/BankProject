@@ -32,7 +32,7 @@ public class CardController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    List<Card> findAll() {
+    public List<Card> findAll() {
         return cardService.findAll();
     }
 
@@ -59,7 +59,7 @@ public class CardController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    Card findCardById(@PathVariable("id") Long id) {
+    public Card findCardById(@PathVariable("id") Long id) {
         return cardService.findCardById(id);
     }
 
@@ -72,7 +72,7 @@ public class CardController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    Card findCardByCardNumber(@RequestParam("CardNumber") String cardNumber) {
+    public Card findCardByCardNumber(@RequestParam("CardNumber") String cardNumber) {
         return cardService.findByCardNumber(cardNumber);
     }
 
@@ -86,7 +86,7 @@ public class CardController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    Card createCard(@Valid @RequestBody CreateCardRequest createCardRequest) {
+    public Card createCard(@Valid @RequestBody CreateCardRequest createCardRequest) {
         return cardService.createCard(createCardRequest);
     }
 
@@ -100,7 +100,7 @@ public class CardController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    Card updateCard(@Valid @RequestBody UpdateCardRequest updateCardRequest) {
+    public Card updateCard(@Valid @RequestBody UpdateCardRequest updateCardRequest) {
         return cardService.updateCard(updateCardRequest);
     }
 
@@ -113,7 +113,7 @@ public class CardController {
             @ApiResponse(code = 403, message = "Don't have authority"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    void deleteCardById(@PathVariable("id") Long id) {
+    public void deleteCardById(@PathVariable("id") Long id) {
         cardService.deleteCardById(id);
     }
 }

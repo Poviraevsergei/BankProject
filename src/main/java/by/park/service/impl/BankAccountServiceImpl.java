@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -57,7 +58,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         if (!user.getDeleted()) {
             return bankAccountRepository.findAllById(usersId);
         }
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

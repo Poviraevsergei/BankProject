@@ -54,7 +54,7 @@ public class BankServiceImpl implements BankService {
         if(!user.getDeleted()){
             return bankRepository.findAllById(user.getBankAccounts().stream().map(BankAccount::getIdBank).map(Bank::getId).collect(Collectors.toList()));
         }
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

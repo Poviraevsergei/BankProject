@@ -54,7 +54,7 @@ public class BankController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    Bank findBankByBankCode(@RequestParam("BankCode") String bankCode) {
+    public Bank findBankByBankCode(@RequestParam("BankCode") String bankCode) {
         return bankService.findBankByBankCode(bankCode);
     }
 
@@ -80,7 +80,7 @@ public class BankController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    List<Bank> findAllBanks() {
+    public List<Bank> findAllBanks() {
         return bankService.findAllBanks();
     }
 
@@ -107,7 +107,7 @@ public class BankController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    Bank createBank(@Valid @RequestBody CreateBankRequest createBankRequest) {
+    public Bank createBank(@Valid @RequestBody CreateBankRequest createBankRequest) {
         return bankService.createBank(createBankRequest);
     }
 
@@ -121,7 +121,7 @@ public class BankController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    Bank updateBank(@Valid @RequestBody UpdateBankRequest updateBankRequest) {
+    public Bank updateBank(@Valid @RequestBody UpdateBankRequest updateBankRequest) {
         return bankService.updateBank(updateBankRequest);
     }
 
