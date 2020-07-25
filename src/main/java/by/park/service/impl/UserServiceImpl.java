@@ -12,8 +12,10 @@ import by.park.repository.BankRepository;
 import by.park.repository.UserRepository;
 import by.park.security.util.PrincipalUtil;
 import by.park.service.UserService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.Collections;
@@ -102,11 +104,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User userInformation(Principal principal) {
-        User user = findUserByLogin(PrincipalUtil.getUsername(principal));
-       if(!user.getDeleted()){
-            return user;
+    public Optional<User> userInformation(Principal principal) {
+        if (!findUserByLogin(PrincipalUtil.getUsername(principal)).getDeleted()) {
+            User user = findUserByLogin(PrincipalUtil.getUsername(principal));
+            return Optional.of(user);
         }
-        return null;
+        return Optional.empty();
     }
 }

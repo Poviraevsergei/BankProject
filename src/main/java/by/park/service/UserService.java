@@ -22,5 +22,5 @@ public interface UserService {
 
     void deleteUserById(Long id);
 
-    User userInformation(Principal principal);
+    Optional<User> userInformation(Principal principal);
 }

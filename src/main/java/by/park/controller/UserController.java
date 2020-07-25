@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -66,7 +67,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token",required = true,dataType="string",paramType = "header",value = "token")
-    public User informationAboutUser(Principal principal){
+    public Optional<User> informationAboutUser(Principal principal){
         return userService.userInformation(principal);
     }
 
