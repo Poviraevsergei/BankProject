@@ -20,13 +20,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -54,12 +53,12 @@ public class UserController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token",required = true,dataType="string",paramType = "header",value = "token")
-    public Optional<User> findById(@PathVariable("id") Long id) {
+    public User findById(@PathVariable("id") Long id) {
         return userService.findUserById(id);
     }
 
     @GetMapping("/info")
-    @ApiOperation(value = "Show information about User")
+    @ApiOperation(value = "Information about User")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successfully"),
             @ApiResponse(code = 401, message = "Don't have authorization"),
@@ -68,7 +67,7 @@ public class UserController {
     })
     @ApiImplicitParam(name = "X-Auth_Token",required = true,dataType="string",paramType = "header",value = "token")
     User informationAboutUser(Principal principal){
-        return userService.informationAboutUser(principal);
+        return userService.userInformation(principal);
     }
 
     @GetMapping("/find-by-login")

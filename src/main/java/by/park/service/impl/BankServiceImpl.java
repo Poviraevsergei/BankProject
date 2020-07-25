@@ -34,8 +34,8 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public Optional<Bank> findBankById(Long id) {
-        return bankRepository.findById(id);
+    public Bank findBankById(Long id) {
+        return bankRepository.findById(id).get();
     }
 
     @Override

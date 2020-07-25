@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface BankService {
     List<Bank> findAllBanks();
 
-    Optional<Bank> findBankById(Long id);
+    Bank findBankById(Long id);
 
     Bank findBankByName(String bankName);
 

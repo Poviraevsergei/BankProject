@@ -12,12 +12,12 @@ import java.util.Set;
 @Setter
 @Getter
 @ToString(exclude = {
-        "userId","idBank"
+        "userId", "idBank"
 })
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = {
-        "userId","idBank"
+        "userId", "idBank"
 })
 @Entity
 @Table(name = "m_bank_account")

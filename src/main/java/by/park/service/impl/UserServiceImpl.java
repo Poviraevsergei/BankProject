@@ -40,8 +40,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findUserById(Long id) {
-        return userRepository.findById(id);
+    public User findUserById(Long id) {
+        return userRepository.findById(id).get();
     }
 
     @Override
@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User informationAboutUser(Principal principal) {
+    public User userInformation(Principal principal) {
         User user = findUserByLogin(PrincipalUtil.getUsername(principal));
        if(!user.getDeleted()){
             return user;

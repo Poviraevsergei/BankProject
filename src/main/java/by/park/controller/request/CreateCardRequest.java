@@ -20,12 +20,6 @@ import java.util.Date;
 @ApiModel("Card creation model")
 public class CreateCardRequest {
 
-    @NotNull
-    @NotEmpty
-    @Size(min = 19, max = 19)
-    @ApiModelProperty(required = true, dataType = "string", notes = "card number")
-    private String cardNumber;
-
     @Min(1)
     @ApiModelProperty(required = true, dataType = "long", notes = "bank id")
     private Long idBankAccount;

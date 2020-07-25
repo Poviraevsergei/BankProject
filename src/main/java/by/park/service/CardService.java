@@ -4,15 +4,17 @@ import by.park.controller.request.CreateCardRequest;
 import by.park.controller.request.UpdateCardRequest;
 import by.park.domain.Card;
 
+import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 public interface CardService {
     List<Card> findAll();
 
-    Optional<Card> findCardById(Long id);
+    Card findCardById(Long id);
 
-    Card findByCardnumber(String cardNumber);
+    Card findByCardNumber(String cardNumber);
+
+    List<Card> cardInformation(Principal principal);
 
     Card createCard(CreateCardRequest createCardRequest);
 

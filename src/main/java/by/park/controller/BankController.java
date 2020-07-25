@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/banks")
@@ -42,7 +41,7 @@ public class BankController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Optional<Bank> findBankById(@PathVariable("id") Long id) {
+    public Bank findBankById(@PathVariable("id") Long id) {
         return bankService.findBankById(id);
     }
 
@@ -55,7 +54,7 @@ public class BankController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    Bank findBankByBankCode(@RequestParam("bankCode") String bankCode) {
+    Bank findBankByBankCode(@RequestParam("BankCode") String bankCode) {
         return bankService.findBankByBankCode(bankCode);
     }
 
@@ -85,7 +84,7 @@ public class BankController {
         return bankService.findAllBanks();
     }
 
-    @GetMapping("/bank-info")
+    @GetMapping("/info")
     @ApiOperation(value = "Information about User bank")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successfully"),
@@ -94,7 +93,7 @@ public class BankController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public List<Bank> informationAboutUserBanks(Principal principal) {
+    public List<Bank> bankInformation(Principal principal) {
         return bankService.bankInformation(principal);
     }
 

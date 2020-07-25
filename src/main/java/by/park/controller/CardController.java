@@ -4,14 +4,15 @@ import by.park.controller.request.CreateCardRequest;
 import by.park.controller.request.UpdateCardRequest;
 import by.park.domain.Card;
 import by.park.service.CardService;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/cards")
@@ -30,8 +31,23 @@ public class CardController {
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
     })
+    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     List<Card> findAll() {
         return cardService.findAll();
+    }
+
+
+    @GetMapping("/info")
+    @ApiOperation(value = "Information about User cards")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successfully"),
+            @ApiResponse(code = 401, message = "Don't have authorization"),
+            @ApiResponse(code = 403, message = "Don't have authority"),
+            @ApiResponse(code = 404, message = "Resource not found")
+    })
+    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
+    public List<Card> cardInformation(Principal principal) {
+        return cardService.cardInformation(principal);
     }
 
     @GetMapping("/{id}")
@@ -42,8 +58,22 @@ public class CardController {
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
     })
-    Optional<Card> findCardById(@PathVariable("id") Long id) {
+    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
+    Card findCardById(@PathVariable("id") Long id) {
         return cardService.findCardById(id);
+    }
+
+    @GetMapping("/find-by-card-number")
+    @ApiOperation(value = "Finding card by card number")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successful card loading"),
+            @ApiResponse(code = 401, message = "Don't have authorization"),
+            @ApiResponse(code = 403, message = "Don't have authority"),
+            @ApiResponse(code = 404, message = "Resource not found")
+    })
+    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
+    Card findCardByCardNumber(@RequestParam("CardNumber") String cardNumber) {
+        return cardService.findByCardNumber(cardNumber);
     }
 
     @PostMapping
@@ -55,6 +85,7 @@ public class CardController {
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
     })
+    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     Card createCard(@Valid @RequestBody CreateCardRequest createCardRequest) {
         return cardService.createCard(createCardRequest);
     }
@@ -68,6 +99,7 @@ public class CardController {
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
     })
+    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     Card updateCard(@Valid @RequestBody UpdateCardRequest updateCardRequest) {
         return cardService.updateCard(updateCardRequest);
     }
@@ -80,6 +112,7 @@ public class CardController {
             @ApiResponse(code = 401, message = "Don't have authorization"),
             @ApiResponse(code = 403, message = "Don't have authority"),
     })
+    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     void deleteCardById(@PathVariable("id") Long id) {
         cardService.deleteCardById(id);
     }

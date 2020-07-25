@@ -21,7 +21,7 @@ import java.util.Date;
 public class UpdateCardRequest {
 
     @ApiModelProperty(required = true, dataType = "long", notes = "card id")
-    private long id;
+    private Long id;
 
     @NotNull
     @NotEmpty

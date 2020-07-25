@@ -4,17 +4,20 @@ import by.park.controller.request.CreateBankAccountRequest;
 import by.park.controller.request.UpdateBankAccountRequest;
 import by.park.domain.BankAccount;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
 public interface BankAccountService {
     List<BankAccount> findAll();
 
-    Optional<BankAccount> findById(Long id);
+    BankAccount findById(Long id);
 
     BankAccount findBankAccountByIban(String IBAN);
 
-    BankAccount createBankAccount(CreateBankAccountRequest createBankAccountRequest);
+    List<BankAccount> bankAccountInformation(Principal principal);
+
+    BankAccount createBankAccount(CreateBankAccountRequest createBankAccountRequest, Principal principal);
 
     BankAccount updateBankAccount(UpdateBankAccountRequest updateBankAccountRequest);
 
