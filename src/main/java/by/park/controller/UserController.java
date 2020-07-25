@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,7 +58,20 @@ public class UserController {
         return userService.findUserById(id);
     }
 
-    @GetMapping("/find-by-username")
+    @GetMapping("/info")
+    @ApiOperation(value = "Show information about User")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successfully"),
+            @ApiResponse(code = 401, message = "Don't have authorization"),
+            @ApiResponse(code = 403, message = "Don't have authority"),
+            @ApiResponse(code = 404, message = "Resource not found")
+    })
+    @ApiImplicitParam(name = "X-Auth_Token",required = true,dataType="string",paramType = "header",value = "token")
+    User informationAboutUser(Principal principal){
+        return userService.informationAboutUser(principal);
+    }
+
+    @GetMapping("/find-by-login")
     @ApiOperation(value = "Finding user by login")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successful user loading"),

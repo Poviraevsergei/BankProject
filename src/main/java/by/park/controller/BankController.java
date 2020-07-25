@@ -4,6 +4,7 @@ import by.park.controller.request.CreateBankRequest;
 import by.park.controller.request.UpdateBankRequest;
 import by.park.domain.Bank;
 import by.park.service.BankService;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -18,11 +19,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/bank")
+@RequestMapping("/banks")
 public class BankController {
 
     BankService bankService;
@@ -39,6 +41,7 @@ public class BankController {
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
     })
+    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Optional<Bank> findBankById(@PathVariable("id") Long id) {
         return bankService.findBankById(id);
     }
@@ -51,6 +54,7 @@ public class BankController {
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
     })
+    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     Bank findBankByBankCode(@RequestParam("bankCode") String bankCode) {
         return bankService.findBankByBankCode(bankCode);
     }
@@ -63,6 +67,7 @@ public class BankController {
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
     })
+    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Bank findBankByName(@RequestParam("bankName") String bankName) {
         return bankService.findBankByName(bankName);
     }
@@ -75,8 +80,22 @@ public class BankController {
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
     })
+    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     List<Bank> findAllBanks() {
         return bankService.findAllBanks();
+    }
+
+    @GetMapping("/bank-info")
+    @ApiOperation(value = "Information about User bank")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successfully"),
+            @ApiResponse(code = 401, message = "Don't have authorization"),
+            @ApiResponse(code = 403, message = "Don't have authority"),
+            @ApiResponse(code = 404, message = "Resource not found")
+    })
+    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
+    public List<Bank> informationAboutUserBanks(Principal principal) {
+        return bankService.bankInformation(principal);
     }
 
     @PostMapping
@@ -88,6 +107,7 @@ public class BankController {
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
     })
+    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     Bank createBank(@Valid @RequestBody CreateBankRequest createBankRequest) {
         return bankService.createBank(createBankRequest);
     }
@@ -101,6 +121,7 @@ public class BankController {
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
     })
+    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     Bank updateBank(@Valid @RequestBody UpdateBankRequest updateBankRequest) {
         return bankService.updateBank(updateBankRequest);
     }
@@ -113,6 +134,7 @@ public class BankController {
             @ApiResponse(code = 401, message = "Don't have authorization"),
             @ApiResponse(code = 403, message = "Don't have authority"),
     })
+    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public void deleteBankById(@PathVariable("id") Long id) {
         bankService.deleteBankById(id);
     }

@@ -49,30 +49,30 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     public BankAccount createBankAccount(CreateBankAccountRequest createBankAccountRequest) {
         BankAccount bankAccount = new BankAccount();
-        Optional<Bank> bank = bankRepository.findById(createBankAccountRequest.getIdBank());
-        bankAccount.setIban(createIBAN(bank.get().getBankCode()));
+        Bank bank = bankRepository.findById(createBankAccountRequest.getIdBank()).get();
+        User user = userRepository.findById(createBankAccountRequest.getIdUser()).get();
+        bankAccount.setIban(createIBAN(bank.getBankCode()));
         bankAccount.setAmount(createBankAccountRequest.getAmount());
         bankAccount.setCreated(new Timestamp(new Date().getTime()));
         bankAccount.setChanged(new Timestamp(new Date().getTime()));
-        Optional<User> user = userRepository.findById(createBankAccountRequest.getIdUser());
-        bankAccount.setUserId(user.get());
-        bankAccount.setIdBank(bank.get());
+        bankAccount.setUserId(user);
+        bankAccount.setIdBank(bank);
         return bankAccountRepository.save(bankAccount);
     }
 
     @Override
     public BankAccount updateBankAccount(UpdateBankAccountRequest updateBankAccountRequest) {
         BankAccount bankAccount = new BankAccount();
-        Optional<BankAccount> oldBankAccount = bankAccountRepository.findById(updateBankAccountRequest.getId());
+        BankAccount oldBankAccount = bankAccountRepository.findById(updateBankAccountRequest.getId()).get();
         bankAccount.setId(updateBankAccountRequest.getId());
         bankAccount.setIban(updateBankAccountRequest.getIBAN());
         bankAccount.setAmount(updateBankAccountRequest.getAmount());
-        bankAccount.setCreated(oldBankAccount.get().getCreated());
+        bankAccount.setCreated(oldBankAccount.getCreated());
         bankAccount.setChanged(new Timestamp(new Date().getTime()));
-        Optional<User> user = userRepository.findById(updateBankAccountRequest.getIdUser());
-        bankAccount.setUserId(user.get());
-        Optional<Bank> bank = bankRepository.findById(updateBankAccountRequest.getIdBank());
-        bankAccount.setIdBank(bank.get());
+        User user = userRepository.findById(updateBankAccountRequest.getIdUser()).get();
+        bankAccount.setUserId(user);
+        Bank bank = bankRepository.findById(updateBankAccountRequest.getIdBank()).get();
+        bankAccount.setIdBank(bank);
         return bankAccountRepository.save(bankAccount);
     }
 

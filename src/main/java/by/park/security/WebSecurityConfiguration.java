@@ -60,9 +60,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/actuator/**").permitAll()
-                .antMatchers("/users/**").hasAnyRole("ADMIN")
-                .antMatchers("/auth/**").permitAll()
                 .antMatchers("/registration/**").permitAll()
+                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/users/info").hasAnyRole("USER","ADMIN")
+                .antMatchers("/users/**").hasRole( "ADMIN")
+
+                .antMatchers("/banks/bank-info").hasAnyRole( "ADMIN","USER")
+                .antMatchers("/banks/**").hasRole("ADMIN")
+
                 .antMatchers("/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest()
@@ -71,19 +76,3 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(authenticationTokenFilterBean(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
     }
 }
-/*
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-
-                .antMatchers("/registration/**").permitAll()
-                .antMatchers("/logout/**").permitAll()
-
-
-                .antMatchers("/v2/api-docs/**", "/configuration/ui/**", "/swagger-resources/**",
-                        "/configuration/security/**", "/swagger-ui.html", "/webjars/**").permitAll()
-                .anyRequest().authenticated();
-
-
-    }
-}*/

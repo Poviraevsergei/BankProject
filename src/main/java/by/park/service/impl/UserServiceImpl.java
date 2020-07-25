@@ -10,16 +10,17 @@ import by.park.domain.Role;
 import by.park.domain.User;
 import by.park.repository.BankRepository;
 import by.park.repository.UserRepository;
+import by.park.security.util.PrincipalUtil;
 import by.park.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static by.park.util.MethodsForCreating.createCardNumber;
 import static by.park.util.MethodsForCreating.createIBAN;
 
 @Service
@@ -78,18 +79,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(UpdateUserRequest updateUserRequest) {
-        Optional<User> oldUser = userRepository.findById(updateUserRequest.getId());
+        User oldUser = userRepository.findById(updateUserRequest.getId()).get();
         User user = new User();
         user.setId(updateUserRequest.getId());
         user.setFirstname(updateUserRequest.getFirstname());
         user.setLastname(updateUserRequest.getLastname());
         user.setBirthDate(updateUserRequest.getBirthDate());
         user.setLogin(updateUserRequest.getLogin());
-        user.setCreated(oldUser.get().getCreated());
+        user.setCreated(oldUser.getCreated());
         user.setChanged(new Timestamp(new Date().getTime()));
         user.setPassword(updateUserRequest.getPassword());
         user.setPassportNumber(updateUserRequest.getPassportNumber());
         user.setDeleted(updateUserRequest.getDeleted());
+        user.setRoles(oldUser.getRoles());
+        user.setBankAccounts(oldUser.getBankAccounts());
         return userRepository.save(user);
     }
 
@@ -98,5 +101,12 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteUserById(id);
     }
 
-
+    @Override
+    public User informationAboutUser(Principal principal) {
+        User user = findUserByLogin(PrincipalUtil.getUsername(principal));
+       if(!user.getDeleted()){
+            return user;
+        }
+        return null;
+    }
 }
