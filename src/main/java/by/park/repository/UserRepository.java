@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(rollbackFor = Exception.class, isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
 public interface UserRepository extends JpaRepository<User, Long> {
+
     @Modifying
     @Query("update User u set u.deleted = true where u.id = :id")
     void deleteUserById(@Param("id") Long id);

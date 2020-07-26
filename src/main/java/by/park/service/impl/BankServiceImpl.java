@@ -9,6 +9,7 @@ import by.park.repository.BankRepository;
 import by.park.repository.UserRepository;
 import by.park.security.util.PrincipalUtil;
 import by.park.service.BankService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -28,6 +29,7 @@ public class BankServiceImpl implements BankService {
         this.userRepository = userRepository;
     }
 
+    @Cacheable(value = "banks")
     @Override
     public List<Bank> findAllBanks() {
         return bankRepository.findAll();
