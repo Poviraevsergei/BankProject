@@ -19,13 +19,13 @@ public class CreateUserRequest {
 
     @NotNull
     @NotEmpty
-    @Size(min = 3, max = 100)
+    @Size(min = 2, max = 100)
     @ApiModelProperty(required = true, dataType = "string", notes = "user firstname")
     private String firstname;
 
     @NotNull
     @NotEmpty
-    @Size(min = 3, max = 100)
+    @Size(min = 2, max = 100)
     @ApiModelProperty(required = true, dataType = "string", notes = "user lastname")
     private String lastname;
 
@@ -34,19 +34,19 @@ public class CreateUserRequest {
 
     @NotNull
     @NotEmpty
-    @Size(min = 3, max = 100)
+    @Size(min = 5, max = 100)
     @ApiModelProperty(required = true, dataType = "string", notes = "user login")
     private String login;
 
     @NotNull
     @NotEmpty
-    @Size(min = 3, max = 100)
+    @Size(min = 5, max = 100)
     @ApiModelProperty(required = true, dataType = "string", notes = "user password")
     private String password;
 
     @NotNull
     @NotEmpty
-    @Size(min = 10, max = 50)
+    @Size(min = 9, max = 9)
     @ApiModelProperty(required = true, dataType = "string", notes = "user passport number")
     private String passportNumber;
 

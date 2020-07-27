@@ -1,0 +1,3 @@
+INSERT INTO public.m_banks (id, bank_name, phone_number, bank_code, created, changed) VALUES (11, 'BelBank', '375 29 84 21 782', '427', '2020-07-27 23:04:25.627000', '2020-07-27 23:04:25.627000');
+INSERT INTO public.m_banks (id, bank_name, phone_number, bank_code, created, changed) VALUES (12, 'HtpBank', '375 29 14 31 787', '192', '2020-07-27 23:05:04.648000', '2020-07-27 23:05:04.648000');
+INSERT INTO public.m_banks (id, bank_name, phone_number, bank_code, created, changed) VALUES (13, 'JavaBank', '375 29 24 51 815', '777', '2020-07-27 23:05:52.866000', '2020-07-27 23:05:52.866000');

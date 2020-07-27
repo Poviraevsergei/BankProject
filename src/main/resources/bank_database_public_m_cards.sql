@@ -1,0 +1,2 @@
+INSERT INTO public.m_cards (id, card_number, id_bank_account, expiration_date, card_type, created, changed, is_blocked) VALUES (19, '5839 3316 3377 5770', 30, '2025-07-26', 'DEBET', '2020-07-27 23:07:04.370000', '2020-07-27 23:07:04.371000', false);
+INSERT INTO public.m_cards (id, card_number, id_bank_account, expiration_date, card_type, created, changed, is_blocked) VALUES (20, '2596 9384 4332 1086', 31, '2025-07-26', 'DEBET', '2020-07-27 23:13:32.867000', '2020-07-27 23:13:32.867000', false);

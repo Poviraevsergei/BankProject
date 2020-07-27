@@ -164,6 +164,12 @@
             <version>2.9.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>6.5.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>

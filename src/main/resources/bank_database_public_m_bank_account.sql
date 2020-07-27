@@ -1,0 +1,2 @@
+INSERT INTO public.m_bank_account (id, iban, amount, id_user, id_bank, created, changed) VALUES (31, 'BY20 427 3153 7519 2534 3199 6034', 999700, 47, 11, '2020-07-27 23:12:02.242000', null);
+INSERT INTO public.m_bank_account (id, iban, amount, id_user, id_bank, created, changed) VALUES (30, 'BY20 777 2046 5688 3425 2027 5360', 770, 1, 13, '2020-07-27 23:06:49.831000', '2020-07-27 23:06:49.839000');
