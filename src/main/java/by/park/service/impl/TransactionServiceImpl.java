@@ -13,6 +13,8 @@ import by.park.repository.UserRepository;
 import by.park.security.util.PrincipalUtil;
 import by.park.service.TransactionService;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -37,8 +39,8 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Transaction> findAllTransactions() {
-        return transactionRepository.findAll();
+    public Page<Transaction> findAllTransactions(Pageable pageable) {
+        return transactionRepository.findAll(pageable);
     }
 
     @Override

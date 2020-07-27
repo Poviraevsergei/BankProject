@@ -5,11 +5,11 @@ import by.park.controller.request.UpdateCardRequest;
 import by.park.domain.Card;
 import by.park.security.util.PrincipalUtil;
 import by.park.service.CardService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -17,6 +17,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cards")
+@ApiResponses({
+        @ApiResponse(code = 401, message = "Don't have authorization"),
+        @ApiResponse(code = 403, message = "Don't have authority"),
+        @ApiResponse(code = 404, message = "Resource not found")
+})
 public class CardController {
     CardService cardService;
 
@@ -28,13 +33,15 @@ public class CardController {
     @ApiOperation(value = "Finding all cards")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successful loading cards"),
-            @ApiResponse(code = 401, message = "Don't have authorization"),
-            @ApiResponse(code = 403, message = "Don't have authority"),
-            @ApiResponse(code = 404, message = "Resource not found")
     })
-    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public List<Card> findAll() {
-        return cardService.findAll();
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token"),
+            @ApiImplicitParam(name = "page", value = "Page number", example = "0", dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "size", value = "Items per page", example = "3", dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "sort", value = "Field to sort", example = "id", dataType = "string", paramType = "query")
+    })
+    public Page<Card> findAll(@ApiIgnore Pageable pageable) {
+        return cardService.findAll(pageable);
     }
 
 
@@ -42,9 +49,6 @@ public class CardController {
     @ApiOperation(value = "Information about User cards")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successfully"),
-            @ApiResponse(code = 401, message = "Don't have authorization"),
-            @ApiResponse(code = 403, message = "Don't have authority"),
-            @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public List<Card> cardInformation(Principal principal) {
@@ -55,9 +59,6 @@ public class CardController {
     @ApiOperation(value = "Finding card by id")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successful card loading"),
-            @ApiResponse(code = 401, message = "Don't have authorization"),
-            @ApiResponse(code = 403, message = "Don't have authority"),
-            @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Card findCardById(@PathVariable("id") Long id) {
@@ -68,9 +69,6 @@ public class CardController {
     @ApiOperation(value = "Finding card by card number")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successful card loading"),
-            @ApiResponse(code = 401, message = "Don't have authorization"),
-            @ApiResponse(code = 403, message = "Don't have authority"),
-            @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Card findCardByCardNumber(@RequestParam("CardNumber") String cardNumber) {
@@ -82,9 +80,6 @@ public class CardController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successful card creating"),
             @ApiResponse(code = 201, message = "Successful card creating"),
-            @ApiResponse(code = 401, message = "Don't have authorization"),
-            @ApiResponse(code = 403, message = "Don't have authority"),
-            @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Card createCard(@Valid @RequestBody CreateCardRequest createCardRequest, Principal principal) {
@@ -96,9 +91,6 @@ public class CardController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successful card updating"),
             @ApiResponse(code = 201, message = "Successful card updating"),
-            @ApiResponse(code = 401, message = "Don't have authorization"),
-            @ApiResponse(code = 403, message = "Don't have authority"),
-            @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Card updateCard(@Valid @RequestBody UpdateCardRequest updateCardRequest) {
@@ -106,9 +98,14 @@ public class CardController {
     }
 
     @PutMapping("/blocked")
+    @ApiOperation(value = "Blocked card")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Card was blocked"),
+            @ApiResponse(code = 204, message = "card was blocked"),
+    })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Card blockedCard(@RequestParam("cardNUmber")String cardNUmber, Principal principal){
-        return cardService.blockedCard(cardNUmber,principal);
+    public Card blockedCard(@RequestParam("cardNUmber") String cardNUmber, Principal principal) {
+        return cardService.blockedCard(cardNUmber, principal);
     }
 
     @DeleteMapping("/{id}")
@@ -116,8 +113,6 @@ public class CardController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Card was deleted"),
             @ApiResponse(code = 204, message = "card was deleted"),
-            @ApiResponse(code = 401, message = "Don't have authorization"),
-            @ApiResponse(code = 403, message = "Don't have authority"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public void deleteCardById(@PathVariable("id") Long id) {

@@ -9,14 +9,13 @@ import by.park.repository.UserRepository;
 import by.park.security.util.PrincipalUtil;
 import by.park.service.CardService;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static by.park.util.MethodsForCreating.createCardNumber;
 
 @Service
 public class CardServiceImpl implements CardService {
@@ -34,8 +33,8 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public List<Card> findAll() {
-        return cardRepository.findAll();
+    public Page<Card> findAll(Pageable pageable) {
+        return cardRepository.findAll(pageable);
     }
 
     @Override

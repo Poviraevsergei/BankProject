@@ -3,6 +3,8 @@ package by.park.service;
 import by.park.controller.request.PayingTransactionRequest;
 import by.park.controller.request.TransferTransactionalRequest;
 import by.park.domain.Transaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 
 import java.security.Principal;
@@ -11,7 +13,7 @@ import java.util.Optional;
 
 public interface TransactionService {
 
-    List<Transaction> findAllTransactions();
+    Page<Transaction> findAllTransactions(Pageable pageable);
 
     Transaction findTransactionById(Long id);
 

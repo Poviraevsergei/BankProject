@@ -4,11 +4,11 @@ import by.park.controller.request.PayingTransactionRequest;
 import by.park.controller.request.TransferTransactionalRequest;
 import by.park.domain.Transaction;
 import by.park.service.TransactionService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -17,6 +17,11 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/transactions")
+@ApiResponses({
+        @ApiResponse(code = 401, message = "Don't have authorization"),
+        @ApiResponse(code = 403, message = "Don't have authority"),
+        @ApiResponse(code = 404, message = "Resource not found")
+})
 public class TransactionController {
 
     TransactionService transactionService;
@@ -30,22 +35,21 @@ public class TransactionController {
     @ApiOperation(value = "Finding all transactions")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successful loading transactions"),
-            @ApiResponse(code = 401, message = "Don't have authorization"),
-            @ApiResponse(code = 403, message = "Don't have authority"),
-            @ApiResponse(code = 404, message = "Resource not found")
     })
-    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public List<Transaction> findAllTransactions() {
-        return transactionService.findAllTransactions();
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token"),
+            @ApiImplicitParam(name = "page", value = "Page number", example = "0", dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "size", value = "Items per page", example = "3", dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "sort", value = "Field to sort", example = "id", dataType = "string", paramType = "query")
+    })
+    public Page<Transaction> findAllTransactions(@ApiIgnore Pageable pageable) {
+        return transactionService.findAllTransactions(pageable);
     }
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Finding transactions by id")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successful card loading"),
-            @ApiResponse(code = 401, message = "Don't have authorization"),
-            @ApiResponse(code = 403, message = "Don't have authority"),
-            @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Transaction findTransactionById(@PathVariable("id") Long id) {
@@ -56,9 +60,6 @@ public class TransactionController {
     @ApiOperation(value = "Information about User transactions")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successfully"),
-            @ApiResponse(code = 401, message = "Don't have authorization"),
-            @ApiResponse(code = 403, message = "Don't have authority"),
-            @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public List<Transaction> transactionInformation(Principal principal) {
@@ -69,9 +70,6 @@ public class TransactionController {
     @ApiOperation(value = "Paying for something")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successfully"),
-            @ApiResponse(code = 401, message = "Don't have authorization"),
-            @ApiResponse(code = 403, message = "Don't have authority"),
-            @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public String paying(@Valid @RequestBody PayingTransactionRequest payingTransactionRequest, Principal principal) {
@@ -82,9 +80,6 @@ public class TransactionController {
     @ApiOperation(value = "Transfer money from card to card")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successfully"),
-            @ApiResponse(code = 401, message = "Don't have authorization"),
-            @ApiResponse(code = 403, message = "Don't have authority"),
-            @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public String transfer(@Valid @RequestBody TransferTransactionalRequest transferTransactionalRequest, Principal principal) {
@@ -96,8 +91,6 @@ public class TransactionController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Card was deleted"),
             @ApiResponse(code = 204, message = "card was deleted"),
-            @ApiResponse(code = 401, message = "Don't have authorization"),
-            @ApiResponse(code = 403, message = "Don't have authority"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public void deleteTransactionById(@PathVariable("id") Long id) {

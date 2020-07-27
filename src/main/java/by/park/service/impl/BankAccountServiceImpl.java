@@ -2,7 +2,6 @@ package by.park.service.impl;
 
 import by.park.controller.request.CreateBankAccountRequest;
 import by.park.controller.request.UpdateBankAccountRequest;
-import by.park.domain.Bank;
 import by.park.domain.BankAccount;
 import by.park.domain.User;
 import by.park.repository.BankAccountRepository;
@@ -11,17 +10,15 @@ import by.park.repository.UserRepository;
 import by.park.security.util.PrincipalUtil;
 import by.park.service.BankAccountService;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.sql.Timestamp;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static by.park.util.MethodsForCreating.createIBAN;
 
 @Service
 public class BankAccountServiceImpl implements BankAccountService {
@@ -39,8 +36,8 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public List<BankAccount> findAll() {
-        return bankAccountRepository.findAll();
+    public Page<BankAccount> findAll(Pageable pageable) {
+        return bankAccountRepository.findAll(pageable);
     }
 
     @Override
