@@ -7,8 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
 
@@ -24,5 +22,5 @@ public interface UserService {
 
     void deleteUserById(Long id);
 
-    Optional<User> userInformation(Principal principal);
+    User userInformation(Principal principal);
 }

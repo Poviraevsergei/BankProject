@@ -4,11 +4,13 @@ import by.park.controller.request.CreateBankRequest;
 import by.park.controller.request.UpdateBankRequest;
 import by.park.domain.Bank;
 import by.park.service.BankService;
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiImplicitParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/banks")
@@ -57,70 +60,70 @@ public class BankController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Finding bank by id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful bank loading"),
+            @ApiResponse(code = 200, message = "Bank found successfully by id"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Bank findBankById(@PathVariable("id") Long id) {
-        return bankService.findBankById(id);
+    public Optional<Bank> findBankById(@PathVariable("id") Long id) {
+        return Optional.ofNullable(bankService.findBankById(id));
     }
 
     @GetMapping("/find-bank-by-code")
     @ApiOperation(value = "Finding bank by bank code")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful bank loading"),
+            @ApiResponse(code = 200, message = "Bank found successfully by bank code"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Bank findBankByBankCode(@RequestParam("BankCode") String bankCode) {
-        return bankService.findBankByBankCode(bankCode);
+    public Optional<Bank> findBankByBankCode(@RequestParam("BankCode") String bankCode) {
+        return Optional.ofNullable(bankService.findBankByBankCode(bankCode));
     }
 
     @GetMapping("/find-bank-by-name")
     @ApiOperation(value = "Finding bank by name")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful bank loading"),
+            @ApiResponse(code = 200, message = "Bank found successfully by name"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Bank findBankByName(@RequestParam("bankName") String bankName) {
-        return bankService.findBankByName(bankName);
+    public Optional<Bank> findBankByName(@RequestParam("bankName") String bankName) {
+        return Optional.ofNullable(bankService.findBankByName(bankName));
     }
 
     @GetMapping("/info")
     @ApiOperation(value = "Information about User bank")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successfully"),
+            @ApiResponse(code = 200, message = "Information loaded successfully"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public List<Bank> bankInformation(Principal principal) {
-        return bankService.bankInformation(principal);
+    public Optional<List<Bank>> bankInformation(Principal principal) {
+        return Optional.ofNullable(bankService.bankInformation(principal));
     }
 
     @PostMapping
     @ApiOperation(value = "Creating bank")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful bank creating"),
-            @ApiResponse(code = 201, message = "Successful bank creating"),
+            @ApiResponse(code = 200, message = "Bank has been successfully created"),
+            @ApiResponse(code = 201, message = "Bank has been successfully created"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Bank createBank(@Valid @RequestBody CreateBankRequest createBankRequest) {
-        return bankService.createBank(createBankRequest);
+    public Optional<Bank> createBank(@Valid @RequestBody CreateBankRequest createBankRequest) {
+        return Optional.ofNullable(bankService.createBank(createBankRequest));
     }
 
     @PutMapping
     @ApiOperation(value = "Updating bank")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful bank updating"),
-            @ApiResponse(code = 201, message = "Successful bank updating"),
+            @ApiResponse(code = 200, message = "Bank has been successfully updated"),
+            @ApiResponse(code = 201, message = "Bank has been successfully updated"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Bank updateBank(@Valid @RequestBody UpdateBankRequest updateBankRequest) {
-        return bankService.updateBank(updateBankRequest);
+    public Optional<Bank> updateBank(@Valid @RequestBody UpdateBankRequest updateBankRequest) {
+        return Optional.ofNullable(bankService.updateBank(updateBankRequest));
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Deleting bank")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Bank was deleted"),
-            @ApiResponse(code = 204, message = "Bank was deleted"),
+            @ApiResponse(code = 200, message = "Bank was deleted successfully"),
+            @ApiResponse(code = 204, message = "Bank was deleted successfully"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public void deleteBankById(@PathVariable("id") Long id) {

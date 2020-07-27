@@ -3,17 +3,29 @@ package by.park.controller;
 import by.park.controller.request.CreateCardRequest;
 import by.park.controller.request.UpdateCardRequest;
 import by.park.domain.Card;
-import by.park.security.util.PrincipalUtil;
 import by.park.service.CardService;
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiImplicitParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/cards")
@@ -44,75 +56,74 @@ public class CardController {
         return cardService.findAll(pageable);
     }
 
-
-    @GetMapping("/info")
-    @ApiOperation(value = "Information about User cards")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Successfully"),
-    })
-    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public List<Card> cardInformation(Principal principal) {
-        return cardService.cardInformation(principal);
-    }
-
     @GetMapping("/{id}")
     @ApiOperation(value = "Finding card by id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful card loading"),
+            @ApiResponse(code = 200, message = "Card found successfully by id"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Card findCardById(@PathVariable("id") Long id) {
-        return cardService.findCardById(id);
+    public Optional<Card> findCardById(@PathVariable("id") Long id) {
+        return Optional.ofNullable(cardService.findCardById(id));
     }
 
     @GetMapping("/find-by-card-number")
     @ApiOperation(value = "Finding card by card number")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful card loading"),
+            @ApiResponse(code = 200, message = "Card found successfully by card number"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Card findCardByCardNumber(@RequestParam("CardNumber") String cardNumber) {
-        return cardService.findByCardNumber(cardNumber);
+    public Optional<Card> findCardByCardNumber(@RequestParam("CardNumber") String cardNumber) {
+        return Optional.ofNullable(cardService.findByCardNumber(cardNumber));
+    }
+
+    @GetMapping("/info")
+    @ApiOperation(value = "Information about User cards")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Information loaded successfully"),
+    })
+    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
+    public Optional<List<Card>> cardInformation(Principal principal) {
+        return Optional.ofNullable(cardService.cardInformation(principal));
     }
 
     @PostMapping("/create")
     @ApiOperation(value = "Creating card")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful card creating"),
-            @ApiResponse(code = 201, message = "Successful card creating"),
+            @ApiResponse(code = 200, message = "Card has been successfully created"),
+            @ApiResponse(code = 201, message = "Card has been successfully created"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Card createCard(@Valid @RequestBody CreateCardRequest createCardRequest, Principal principal) {
-        return cardService.createCard(createCardRequest, principal);
+    public Optional<Card> createCard(@Valid @RequestBody CreateCardRequest createCardRequest, Principal principal) {
+        return Optional.ofNullable(cardService.createCard(createCardRequest, principal));
     }
 
     @PutMapping
     @ApiOperation(value = "Updating card")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful card updating"),
-            @ApiResponse(code = 201, message = "Successful card updating"),
+            @ApiResponse(code = 200, message = "Card has been successfully updated"),
+            @ApiResponse(code = 201, message = "Card has been successfully updated"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Card updateCard(@Valid @RequestBody UpdateCardRequest updateCardRequest) {
-        return cardService.updateCard(updateCardRequest);
+    public Optional<Card> updateCard(@Valid @RequestBody UpdateCardRequest updateCardRequest) {
+        return Optional.ofNullable(cardService.updateCard(updateCardRequest));
     }
 
     @PutMapping("/blocked")
     @ApiOperation(value = "Blocked card")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Card was blocked"),
-            @ApiResponse(code = 204, message = "card was blocked"),
+            @ApiResponse(code = 200, message = "Card has been successfully blocked"),
+            @ApiResponse(code = 204, message = "Card has been successfully blocked"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Card blockedCard(@RequestParam("cardNUmber") String cardNUmber, Principal principal) {
-        return cardService.blockedCard(cardNUmber, principal);
+    public Optional<Card> blockedCard(@RequestParam("cardNUmber") String cardNUmber, Principal principal) {
+        return Optional.ofNullable(cardService.blockedCard(cardNUmber, principal));
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Deleting card")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Card was deleted"),
-            @ApiResponse(code = 204, message = "card was deleted"),
+            @ApiResponse(code = 200, message = "Card was deleted successfully"),
+            @ApiResponse(code = 204, message = "Card was deleted successfully"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public void deleteCardById(@PathVariable("id") Long id) {

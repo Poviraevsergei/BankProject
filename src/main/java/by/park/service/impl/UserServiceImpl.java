@@ -62,11 +62,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> userInformation(Principal principal) {
+    public User userInformation(Principal principal) {
+        User user = null;
         if (!findUserByLogin(PrincipalUtil.getUsername(principal)).getDeleted()) {
-            User user = findUserByLogin(PrincipalUtil.getUsername(principal));
-            return Optional.of(user);
+            return findUserByLogin(PrincipalUtil.getUsername(principal));
         }
-        return Optional.empty();
+        return user;
     }
 }

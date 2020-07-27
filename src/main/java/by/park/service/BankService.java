@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 public interface BankService {
     Page<Bank> findAllBanks(Pageable pageable);
