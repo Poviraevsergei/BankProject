@@ -16,7 +16,7 @@ public class TransactionTransferRequestConverter extends TransactionRequestConve
     @Override
     public Transaction convert(TransferTransactionalRequest request) {
         Transaction transaction = new Transaction();
-        transaction.setTypeOfTransaction("Transfer to " + request.getToCardNumber() + ". " + transaction.getTypeOfTransaction());
+        transaction.setTypeOfTransaction("Transfer to " + request.getToCardNumber() + ". " + request.getTypeOfTransaction());
         return doConvert(transaction, request);
     }
 }

@@ -3,6 +3,7 @@ package by.park.controller;
 import by.park.controller.request.CreateCardRequest;
 import by.park.controller.request.UpdateCardRequest;
 import by.park.domain.Card;
+import by.park.security.util.PrincipalUtil;
 import by.park.service.CardService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -76,7 +77,7 @@ public class CardController {
         return cardService.findByCardNumber(cardNumber);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     @ApiOperation(value = "Creating card")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successful card creating"),
@@ -86,8 +87,8 @@ public class CardController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Card createCard(@Valid @RequestBody CreateCardRequest createCardRequest) {
-        return cardService.createCard(createCardRequest);
+    public Card createCard(@Valid @RequestBody CreateCardRequest createCardRequest, Principal principal) {
+        return cardService.createCard(createCardRequest, principal);
     }
 
     @PutMapping
@@ -102,6 +103,12 @@ public class CardController {
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Card updateCard(@Valid @RequestBody UpdateCardRequest updateCardRequest) {
         return cardService.updateCard(updateCardRequest);
+    }
+
+    @PutMapping("/blocked")
+    @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
+    public Card blockedCard(@RequestParam("cardNUmber")String cardNUmber, Principal principal){
+        return cardService.blockedCard(cardNUmber,principal);
     }
 
     @DeleteMapping("/{id}")

@@ -67,6 +67,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/banks/info").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/banks/**").hasRole("ADMIN")
                 .antMatchers("/cards/info").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/cards/create").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/cards/blocked").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/cards/**").hasRole("ADMIN")
                 .antMatchers("/bankAccounts/info").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/bankAccounts/create").hasAnyRole("ADMIN", "USER")

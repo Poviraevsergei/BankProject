@@ -3,6 +3,7 @@ package by.park.service.impl;
 import by.park.controller.request.PayingTransactionRequest;
 import by.park.controller.request.TransferTransactionalRequest;
 import by.park.domain.BankAccount;
+import by.park.domain.Card;
 import by.park.domain.Transaction;
 import by.park.domain.User;
 import by.park.repository.BankAccountRepository;
@@ -45,8 +46,9 @@ public class TransactionServiceImpl implements TransactionService {
         BankAccount bankAccount = bankAccountRepository.findById(
                 cardRepository.findByCardNumber(request.getFromCardNumber()).getIdBankAccount().getId()
         ).get();
+        Card cardFrom = cardRepository.findByCardNumber(request.getFromCardNumber());
         if (bankAccount.getAmount() >= request.getCount() &&
-                bankAccount.getUserId() == userRepository.findByLogin(PrincipalUtil.getUsername(principal))) {
+                bankAccount.getUserId() == userRepository.findByLogin(PrincipalUtil.getUsername(principal)) && !cardFrom.getBlocked()) {
             Transaction transaction = conversionService.convert(request, Transaction.class);
             if (transaction != null) {
                 bankAccount.setAmount(bankAccount.getAmount() - request.getCount());
@@ -73,8 +75,10 @@ public class TransactionServiceImpl implements TransactionService {
     public String transfer(TransferTransactionalRequest request, Principal principal) {
         BankAccount bankAccountFrom = bankAccountRepository.findById(cardRepository.findByCardNumber(request.getFromCardNumber()).getIdBankAccount().getId()).get();
         BankAccount bankAccountTo = bankAccountRepository.findById(cardRepository.findByCardNumber(request.getToCardNumber()).getIdBankAccount().getId()).get();
+        Card cardTo = cardRepository.findByCardNumber(request.getToCardNumber());
+        Card cardFrom = cardRepository.findByCardNumber(request.getFromCardNumber());
         if (bankAccountFrom.getAmount() >= request.getCount() &&
-                bankAccountFrom.getUserId() == userRepository.findByLogin(PrincipalUtil.getUsername(principal))
+                bankAccountFrom.getUserId() == userRepository.findByLogin(PrincipalUtil.getUsername(principal)) && !cardFrom.getBlocked() && !cardTo.getBlocked()
         ) {
             Transaction transaction = conversionService.convert(request, Transaction.class);
             if (transaction != null) {

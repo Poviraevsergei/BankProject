@@ -28,6 +28,7 @@ public class CardCreateRequestConverter extends CardRequestConverter<CreateCardR
         cal.add(Calendar.DATE, 1825);
         card.setExpirationDate(cal.getTime());
         card.setCreated(new Timestamp(new Date().getTime()));
+        card.setBlocked(false);
         return doConvert(card, request);
     }
 }

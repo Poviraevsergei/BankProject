@@ -16,10 +16,11 @@ public interface CardService {
 
     List<Card> cardInformation(Principal principal);
 
-    Card createCard(CreateCardRequest createCardRequest);
+    Card createCard(CreateCardRequest createCardRequest, Principal principal);
 
     Card updateCard(UpdateCardRequest updateCardRequest);
 
-    void deleteCardById(Long id);
+    Card blockedCard(String cardNumber, Principal principal);
 
+    void deleteCardById(Long id);
 }

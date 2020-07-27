@@ -52,7 +52,6 @@ public class BeanConfiguration {
     private Properties getAdditionalProperties() {
         Properties properties = new Properties();
 
-        // See: application.properties
         properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL10Dialect");
         properties.put("hibernate.show_sql", "true");
         properties.put("hibernate.connection.characterEncoding", "utf8mb4");

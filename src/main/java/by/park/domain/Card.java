@@ -54,4 +54,7 @@ public class Card {
 
     @Column(name = "card_type")
     private String cardType;
+
+    @Column(name = "is_blocked")
+    private Boolean blocked;
 }

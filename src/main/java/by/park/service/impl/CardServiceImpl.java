@@ -51,25 +51,41 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<Card> cardInformation(Principal principal) {
         User user = userRepository.findByLogin(PrincipalUtil.getUsername(principal));
-        Set<BankAccount> bankAccount=user.getBankAccounts();
-        Set<Card> userCards =bankAccount.stream().map(BankAccount::getCards).findAny().get();
-        Set<Long> usersId =userCards.stream().map(Card::getId).collect(Collectors.toSet());
-        if(!user.getDeleted()){
+        Set<BankAccount> bankAccount = user.getBankAccounts();
+        Set<Card> userCards = bankAccount.stream().map(BankAccount::getCards).findAny().get();
+        Set<Long> usersId = userCards.stream().map(Card::getId).collect(Collectors.toSet());
+        if (!user.getDeleted()) {
             return cardRepository.findAllById(usersId);
         }
         return null;
     }
 
     @Override
-    public Card createCard(CreateCardRequest request) {
-        Card card = conversionService.convert(request,Card.class);
-        return cardRepository.save(card);
+    public Card createCard(CreateCardRequest request, Principal principal) {
+        User user = userRepository.findByLogin(PrincipalUtil.getUsername(principal));
+        if (user.getBankAccounts().contains(bankAccountRepository.findById(request.getIdBankAccount()).get())) {
+            Card card = conversionService.convert(request, Card.class);
+            return cardRepository.save(card);
+        }
+        return null;
     }
 
     @Override
     public Card updateCard(UpdateCardRequest request) {
-        Card card = conversionService.convert(request,Card.class);
+        Card card = conversionService.convert(request, Card.class);
         return cardRepository.save(card);
+    }
+
+    @Override
+    public Card blockedCard(String cardNumber, Principal principal) {
+        User user = userRepository.findByLogin(PrincipalUtil.getUsername(principal));
+        Card card = cardRepository.findByCardNumber(cardNumber);
+        BankAccount bankAccount = card.getIdBankAccount();
+        if (user.getId() == bankAccount.getUserId().getId()) {
+            card.setBlocked(true);
+            return cardRepository.save(card);
+        }
+        return card;
     }
 
     @Override
