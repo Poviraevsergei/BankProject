@@ -12,6 +12,7 @@ import by.park.repository.TransactionRepository;
 import by.park.repository.UserRepository;
 import by.park.security.util.PrincipalUtil;
 import by.park.service.TransactionService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,10 +22,12 @@ import java.security.Principal;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class TransactionServiceImpl implements TransactionService {
 
     TransactionRepository transactionRepository;
@@ -43,7 +46,24 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Page<Transaction> findAllTransactions(Pageable pageable) {
-        return transactionRepository.findAll(pageable);
+        Page<Transaction> result = transactionRepository.findAll(pageable);
+        if (result.getTotalElements() == 0) {
+            log.warn("Method findAllTransactions: transaction not found !");
+        } else {
+            log.info("Method findAllTransactions: transaction found.");
+        }
+        return result;
+    }
+
+    @Override
+    public Transaction findTransactionById(Long id) {
+        Optional<Transaction> result = transactionRepository.findById(id);
+        if (result.isPresent()) {
+            log.info("Method findTransactionById: transaction found.");
+        } else {
+            log.warn("Method findTransactionById: transaction not found !");
+        }
+        return result.get();
     }
 
     @Override
@@ -58,9 +78,11 @@ public class TransactionServiceImpl implements TransactionService {
             if (transaction != null) {
                 bankAccount.setAmount(bankAccount.getAmount() - request.getCount());
                 transactionRepository.save(transaction);
+                log.info("Method paying: payment completed successfully.");
                 return "Payment completed successfully";
             }
         }
+        log.warn("Method paying: there was a problem with payment");
         return "There was a problem with payment";
     }
 
@@ -71,8 +93,10 @@ public class TransactionServiceImpl implements TransactionService {
         Set<Transaction> userTransactions = bankAccount.stream().map(BankAccount::getTransactions).findAny().get();
         Set<Long> usersId = userTransactions.stream().map(Transaction::getId).collect(Collectors.toSet());
         if (!user.getDeleted()) {
+            log.info("Method transactionInformation: completed successfully.");
             return transactionRepository.findAllById(usersId);
         }
+        log.warn("Method transactionInformation: something went wrong!");
         return Collections.emptyList();
     }
 
@@ -92,19 +116,18 @@ public class TransactionServiceImpl implements TransactionService {
                 bankAccountTo.setAmount(
                         bankAccountTo.getAmount() + request.getCount());
                 transactionRepository.save(transaction);
+                log.info("Method transfer: money transfer was successful.");
                 return "Money transfer was successful!";
             }
         }
+        log.warn("Method transfer: there was a problem with money transfer!");
         return "There was a problem with money transfer";
     }
 
-    @Override
-    public Transaction findTransactionById(Long id) {
-        return transactionRepository.findById(id).get();
-    }
 
     @Override
     public void deleteTransactionById(Long id) {
         transactionRepository.deleteTransactionById(id);
+        log.info("Method deleteTransactionById: transaction deleted.");
     }
 }
