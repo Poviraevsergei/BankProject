@@ -1,2 +1,0 @@
-INSERT INTO public.m_users (id, firstname, lastname, birth_date, login, password, passport_number, created, changed, is_deleted) VALUES (47, 'Mark', 'Zuckerberg', '1984-05-15', 'facebook', 'facebook', 'KH2847184', '2020-07-27 23:12:02.217000', '2020-07-27 23:12:02.243000', false);
-INSERT INTO public.m_users (id, firstname, lastname, birth_date, login, password, passport_number, created, changed, is_deleted) VALUES (1, 'Sergei', 'Poviraev', '1996-02-23', 'admin', 'admin', 'KH2739164', '2020-07-08 00:12:38.000000', '2020-07-25 12:04:39.600000', false);

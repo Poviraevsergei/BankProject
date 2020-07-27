@@ -1,2 +1,0 @@
-INSERT INTO public.m_transactions (id, type_of_transaction, count, id_bank_account, transaction_time, card_number) VALUES (18, 'Internet payment', 30, 30, '2020-07-27 23:08:37.758000', '5839 3316 3377 5770');
-INSERT INTO public.m_transactions (id, type_of_transaction, count, id_bank_account, transaction_time, card_number) VALUES (19, 'Transfer to 5839 3316 3377 5770. Tuition fees', 300, 31, '2020-07-27 23:16:17.273000', '2596 9384 4332 1086');

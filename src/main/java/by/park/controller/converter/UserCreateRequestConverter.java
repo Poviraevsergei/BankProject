@@ -38,6 +38,7 @@ public class UserCreateRequestConverter extends UserRequestConverter<CreateUserR
         bankAccount.setIban(createIBAN(bankRepository.findBankByBankName(request.getBankName()).getBankCode()));
         bankAccount.setUserId(user);
         bankAccount.setCreated(new Timestamp(new Date().getTime()));
+        bankAccount.setChanged(new Timestamp(new Date().getTime()));
         bankAccount.setIdBank(bankRepository.findBankByBankName(request.getBankName()));
         user.setBankAccounts(Collections.singleton(bankAccount));
         return doConvert(user, request);
