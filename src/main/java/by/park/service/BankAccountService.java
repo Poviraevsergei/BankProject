@@ -17,7 +17,7 @@ public interface BankAccountService {
 
     List<BankAccount> bankAccountInformation(Principal principal);
 
-    BankAccount createBankAccount(CreateBankAccountRequest createBankAccountRequest, Principal principal);
+    BankAccount createBankAccount(CreateBankAccountRequest createBankAccountRequest);
 
     BankAccount updateBankAccount(UpdateBankAccountRequest updateBankAccountRequest);
 

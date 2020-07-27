@@ -3,7 +3,6 @@ package by.park.controller.request;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,9 +14,9 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ApiModel("User creation model")
 public class CreateUserRequest {
+
     @NotNull
     @NotEmpty
     @Size(min = 3, max = 100)

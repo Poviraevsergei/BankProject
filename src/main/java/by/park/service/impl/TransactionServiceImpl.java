@@ -11,10 +11,10 @@ import by.park.repository.TransactionRepository;
 import by.park.repository.UserRepository;
 import by.park.security.util.PrincipalUtil;
 import by.park.service.TransactionService;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,12 +25,14 @@ public class TransactionServiceImpl implements TransactionService {
     BankAccountRepository bankAccountRepository;
     CardRepository cardRepository;
     UserRepository userRepository;
+    ConversionService conversionService;
 
-    public TransactionServiceImpl(UserRepository userRepository, TransactionRepository transactionRepository, CardRepository cardRepository, BankAccountRepository bankAccountRepository) {
+    public TransactionServiceImpl(ConversionService conversionService, UserRepository userRepository, TransactionRepository transactionRepository, CardRepository cardRepository, BankAccountRepository bankAccountRepository) {
         this.transactionRepository = transactionRepository;
         this.bankAccountRepository = bankAccountRepository;
         this.cardRepository = cardRepository;
         this.userRepository = userRepository;
+        this.conversionService = conversionService;
     }
 
     @Override
@@ -39,20 +41,18 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public String paying(PayingTransactionRequest payingTransactionRequest, Principal principal) {
+    public String paying(PayingTransactionRequest request, Principal principal) {
         BankAccount bankAccount = bankAccountRepository.findById(
-                cardRepository.findByCardNumber(payingTransactionRequest.getCardNumber()).getIdBankAccount().getId()
+                cardRepository.findByCardNumber(request.getFromCardNumber()).getIdBankAccount().getId()
         ).get();
-        if (bankAccount.getAmount() >= payingTransactionRequest.getCount() &&
+        if (bankAccount.getAmount() >= request.getCount() &&
                 bankAccount.getUserId() == userRepository.findByLogin(PrincipalUtil.getUsername(principal))) {
-            Transaction transaction = new Transaction();
-            transaction.setTypeOfTransaction(payingTransactionRequest.getTypeOfTransaction());
-            transaction.setTransactionTime(new Timestamp(new Date().getTime()));
-            transaction.setCount(payingTransactionRequest.getCount());
-            transaction.setIdBankAccount(bankAccount);
-            bankAccount.setAmount(bankAccount.getAmount() - payingTransactionRequest.getCount());
-            transactionRepository.save(transaction);
-            return "Payment completed successfully";
+            Transaction transaction = conversionService.convert(request, Transaction.class);
+            if (transaction != null) {
+                bankAccount.setAmount(bankAccount.getAmount() - request.getCount());
+                transactionRepository.save(transaction);
+                return "Payment completed successfully";
+            }
         }
         return "There was a problem with payment";
     }
@@ -70,23 +70,21 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public String transfer(TransferTransactionalRequest transfer, Principal principal) {
-        BankAccount bankAccountFrom = bankAccountRepository.findById(cardRepository.findByCardNumber(transfer.getFromCardNumber()).getIdBankAccount().getId()).get();
-        BankAccount bankAccountTo = bankAccountRepository.findById(cardRepository.findByCardNumber(transfer.getToCardNumber()).getIdBankAccount().getId()).get();
-        if (bankAccountFrom.getAmount() >= transfer.getCount() &&
+    public String transfer(TransferTransactionalRequest request, Principal principal) {
+        BankAccount bankAccountFrom = bankAccountRepository.findById(cardRepository.findByCardNumber(request.getFromCardNumber()).getIdBankAccount().getId()).get();
+        BankAccount bankAccountTo = bankAccountRepository.findById(cardRepository.findByCardNumber(request.getToCardNumber()).getIdBankAccount().getId()).get();
+        if (bankAccountFrom.getAmount() >= request.getCount() &&
                 bankAccountFrom.getUserId() == userRepository.findByLogin(PrincipalUtil.getUsername(principal))
         ) {
-            Transaction transaction = new Transaction();
-            bankAccountFrom.setAmount(
-                    bankAccountFrom.getAmount() - transfer.getCount());
-            bankAccountTo.setAmount(
-                    bankAccountTo.getAmount() + transfer.getCount());
-            transaction.setTypeOfTransaction("transfer money from " + transfer.getFromCardNumber() + " to " + transfer.getToCardNumber());
-            transaction.setCount(transfer.getCount());
-            transaction.setIdBankAccount(bankAccountFrom);
-            transaction.setTransactionTime(new Timestamp(new Date().getTime()));
-            transactionRepository.save(transaction);
-            return "Money transfer was successful!";
+            Transaction transaction = conversionService.convert(request, Transaction.class);
+            if (transaction != null) {
+                bankAccountFrom.setAmount(
+                        bankAccountFrom.getAmount() - request.getCount());
+                bankAccountTo.setAmount(
+                        bankAccountTo.getAmount() + request.getCount());
+                transactionRepository.save(transaction);
+                return "Money transfer was successful!";
+            }
         }
         return "There was a problem with money transfer";
     }

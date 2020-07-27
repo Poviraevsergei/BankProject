@@ -13,6 +13,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Temporal;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Setter
@@ -44,6 +45,12 @@ public class Card {
     @Temporal(TemporalType.DATE)
     @Column(name = "expiration_date")
     private Date expirationDate;
+
+    @Column
+    private Timestamp created;
+
+    @Column
+    private Timestamp changed;
 
     @Column(name = "card_type")
     private String cardType;

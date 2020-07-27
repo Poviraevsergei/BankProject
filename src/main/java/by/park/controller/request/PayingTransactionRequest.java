@@ -12,7 +12,6 @@ import javax.validation.constraints.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ApiModel("Transaction paying model")
 public class PayingTransactionRequest {
 
@@ -31,5 +30,5 @@ public class PayingTransactionRequest {
     @NotEmpty
     @Size(min = 19, max = 19)
     @ApiModelProperty(required = true, dataType = "string", notes = "card number")
-    private String cardNumber;
+    private String fromCardNumber;
 }

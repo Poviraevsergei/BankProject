@@ -85,8 +85,8 @@ public class BankAccountController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public BankAccount createBankAccount(@Valid @RequestBody CreateBankAccountRequest createBankAccountRequest, Principal principal) {
-        return bankAccountService.createBankAccount(createBankAccountRequest, principal);
+    public BankAccount createBankAccount(@Valid @RequestBody CreateBankAccountRequest createBankAccountRequest) {
+        return bankAccountService.createBankAccount(createBankAccountRequest);
     }
 
     @PutMapping

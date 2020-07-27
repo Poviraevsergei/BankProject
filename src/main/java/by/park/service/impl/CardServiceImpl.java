@@ -8,6 +8,7 @@ import by.park.repository.CardRepository;
 import by.park.repository.UserRepository;
 import by.park.security.util.PrincipalUtil;
 import by.park.service.CardService;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -23,11 +24,13 @@ public class CardServiceImpl implements CardService {
     CardRepository cardRepository;
     BankAccountRepository bankAccountRepository;
     UserRepository userRepository;
+    ConversionService conversionService;
 
-    public CardServiceImpl(UserRepository userRepository, CardRepository cardRepository, BankAccountRepository bankAccountRepository) {
+    public CardServiceImpl(ConversionService conversionService, UserRepository userRepository, CardRepository cardRepository, BankAccountRepository bankAccountRepository) {
         this.cardRepository = cardRepository;
         this.bankAccountRepository = bankAccountRepository;
         this.userRepository = userRepository;
+        this.conversionService = conversionService;
     }
 
     @Override
@@ -58,25 +61,14 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public Card createCard(CreateCardRequest createCardRequest) {
-        Card card = new Card();
-        BankAccount bankAccount = bankAccountRepository.findById(createCardRequest.getIdBankAccount()).get();
-        card.setCardNumber(createCardNumber());
-        card.setIdBankAccount(bankAccount);
-        card.setExpirationDate(new Timestamp(new Date().getTime()));
-        card.setCardType(createCardRequest.getCardType());
+    public Card createCard(CreateCardRequest request) {
+        Card card = conversionService.convert(request,Card.class);
         return cardRepository.save(card);
     }
 
     @Override
-    public Card updateCard(UpdateCardRequest updateCardRequest) {
-        Card card = new Card();
-        card.setId(updateCardRequest.getId());
-        BankAccount bankAccount = bankAccountRepository.findById(updateCardRequest.getIdBankAccount()).get();
-        card.setCardNumber(updateCardRequest.getCardNumber());
-        card.setIdBankAccount(bankAccount);
-        card.setExpirationDate(cardRepository.findById(updateCardRequest.getId()).get().getExpirationDate());
-        card.setCardType(updateCardRequest.getCardType());
+    public Card updateCard(UpdateCardRequest request) {
+        Card card = conversionService.convert(request,Card.class);
         return cardRepository.save(card);
     }
 

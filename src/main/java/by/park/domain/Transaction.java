@@ -37,6 +37,9 @@ public class Transaction {
     @Column
     private Long count;
 
+    @Column(name = "card_number")
+    private String cardNumber;
+
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "id_bank_account")

@@ -10,6 +10,7 @@ import by.park.repository.BankRepository;
 import by.park.repository.UserRepository;
 import by.park.security.util.PrincipalUtil;
 import by.park.service.BankAccountService;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -28,11 +29,13 @@ public class BankAccountServiceImpl implements BankAccountService {
     BankAccountRepository bankAccountRepository;
     UserRepository userRepository;
     BankRepository bankRepository;
+    ConversionService conversionService;
 
-    public BankAccountServiceImpl(BankRepository bankRepository, BankAccountRepository bankAccountRepository, UserRepository userRepository) {
+    public BankAccountServiceImpl(ConversionService conversionService, BankRepository bankRepository, BankAccountRepository bankAccountRepository, UserRepository userRepository) {
         this.bankAccountRepository = bankAccountRepository;
         this.userRepository = userRepository;
         this.bankRepository = bankRepository;
+        this.conversionService = conversionService;
     }
 
     @Override
@@ -62,32 +65,14 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public BankAccount createBankAccount(CreateBankAccountRequest createBankAccountRequest, Principal principal) {
-        BankAccount bankAccount = new BankAccount();
-        Bank bank = bankRepository.findBankByBankName(createBankAccountRequest.getBankName());
-        User user = userRepository.findByLogin(PrincipalUtil.getUsername(principal));
-        bankAccount.setIban(createIBAN(bank.getBankCode()));
-        bankAccount.setAmount(0L);
-        bankAccount.setCreated(new Timestamp(new Date().getTime()));
-        bankAccount.setChanged(new Timestamp(new Date().getTime()));
-        bankAccount.setUserId(user);
-        bankAccount.setIdBank(bank);
+    public BankAccount createBankAccount(CreateBankAccountRequest request) {
+        BankAccount bankAccount = conversionService.convert(request, BankAccount.class);
         return bankAccountRepository.save(bankAccount);
     }
 
     @Override
-    public BankAccount updateBankAccount(UpdateBankAccountRequest updateBankAccountRequest) {
-        BankAccount bankAccount = new BankAccount();
-        BankAccount oldBankAccount = bankAccountRepository.findById(updateBankAccountRequest.getId()).get();
-        User user = userRepository.findById(updateBankAccountRequest.getIdUser()).get();
-        Bank bank = bankRepository.findById(updateBankAccountRequest.getIdBank()).get();
-        bankAccount.setId(updateBankAccountRequest.getId());
-        bankAccount.setIban(updateBankAccountRequest.getIBAN());
-        bankAccount.setAmount(updateBankAccountRequest.getAmount());
-        bankAccount.setCreated(oldBankAccount.getCreated());
-        bankAccount.setChanged(new Timestamp(new Date().getTime()));
-        bankAccount.setUserId(user);
-        bankAccount.setIdBank(bank);
+    public BankAccount updateBankAccount(UpdateBankAccountRequest request) {
+        BankAccount bankAccount = conversionService.convert(request, BankAccount.class);
         return bankAccountRepository.save(bankAccount);
     }
 

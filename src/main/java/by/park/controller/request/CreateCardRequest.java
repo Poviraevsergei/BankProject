@@ -16,7 +16,6 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ApiModel("Card creation model")
 public class CreateCardRequest {
 

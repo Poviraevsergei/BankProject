@@ -12,7 +12,6 @@ import javax.validation.constraints.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ApiModel("Bank account creation model")
 public class CreateBankAccountRequest {
 
@@ -21,4 +20,10 @@ public class CreateBankAccountRequest {
     @Size(min = 1, max = 100)
     @ApiModelProperty(required = true, dataType = "string", notes = "bank name")
     private String bankName;
+
+    @NotNull
+    @NotEmpty
+    @Size(min = 1, max = 100)
+    @ApiModelProperty(required = true, dataType = "string", notes = "user login")
+    private String userLogin;
 }

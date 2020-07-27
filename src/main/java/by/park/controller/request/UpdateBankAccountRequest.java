@@ -15,9 +15,8 @@ import javax.validation.constraints.Size;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ApiModel("Bank account updating model")
-public class UpdateBankAccountRequest {
+public class UpdateBankAccountRequest extends CreateBankAccountRequest {
 
     @ApiModelProperty(required = true, dataType = "long", notes = "bank account id")
     private long id;
@@ -32,9 +31,6 @@ public class UpdateBankAccountRequest {
     @ApiModelProperty(dataType = "long", required = true, notes = "amount money on bank acccount")
     private Long amount;
 
-    @Min(1)
-    @ApiModelProperty(required = true, dataType = "long", notes = "user id")
-    private Long idUser;
 
     @Min(1)
     @ApiModelProperty(required = true, dataType = "long", notes = "bank id")

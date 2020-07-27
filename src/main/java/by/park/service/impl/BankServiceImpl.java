@@ -10,10 +10,10 @@ import by.park.repository.UserRepository;
 import by.park.security.util.PrincipalUtil;
 import by.park.service.BankService;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,12 +21,13 @@ import java.util.stream.Collectors;
 public class BankServiceImpl implements BankService {
 
     BankRepository bankRepository;
-
+    ConversionService conversionService;
     UserRepository userRepository;
 
-    public BankServiceImpl(BankRepository bankRepository, UserRepository userRepository) {
+    public BankServiceImpl(ConversionService conversionService, BankRepository bankRepository, UserRepository userRepository) {
         this.bankRepository = bankRepository;
         this.userRepository = userRepository;
+        this.conversionService = conversionService;
     }
 
     @Cacheable(value = "banks")
@@ -53,35 +54,21 @@ public class BankServiceImpl implements BankService {
     @Override
     public List<Bank> bankInformation(Principal principal) {
         User user = userRepository.findByLogin(PrincipalUtil.getUsername(principal));
-        if(!user.getDeleted()){
+        if (!user.getDeleted()) {
             return bankRepository.findAllById(user.getBankAccounts().stream().map(BankAccount::getIdBank).map(Bank::getId).collect(Collectors.toList()));
         }
         return Collections.emptyList();
     }
 
     @Override
-    public Bank createBank(CreateBankRequest createBankRequest) {
-        Bank bank = new Bank();
-        bank.setBankName(createBankRequest.getBankName());
-        bank.setPhoneNumber(createBankRequest.getPhoneNumber());
-        bank.setBankCode(createBankRequest.getBankCode());
-        bank.setCreated(new Timestamp(new Date().getTime()));
-        bank.setChanged(new Timestamp(new Date().getTime()));
+    public Bank createBank(CreateBankRequest request) {
+        Bank bank = conversionService.convert(request, Bank.class);
         return bankRepository.save(bank);
     }
 
     @Override
-    public Bank updateBank(UpdateBankRequest updateBankRequest) {
-        Bank oldBank = bankRepository.findById(updateBankRequest.getId()).get();
-
-        Bank bank = new Bank();
-        bank.setId(updateBankRequest.getId());
-        bank.setBankName(updateBankRequest.getBankName());
-        bank.setPhoneNumber(updateBankRequest.getPhoneNumber());
-        bank.setBankCode(updateBankRequest.getBankCode());
-        bank.setCreated(oldBank.getCreated());
-        bank.setChanged(new Timestamp(new Date().getTime()));
-        bank.setBankAccounts(oldBank.getBankAccounts());
+    public Bank updateBank(UpdateBankRequest request) {
+        Bank bank = conversionService.convert(request, Bank.class);
         return bankRepository.save(bank);
     }
 
