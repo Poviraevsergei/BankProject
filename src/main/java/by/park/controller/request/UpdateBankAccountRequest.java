@@ -31,8 +31,4 @@ public class UpdateBankAccountRequest extends CreateBankAccountRequest {
     @Min(1)
     @ApiModelProperty(dataType = "long", required = true, notes = "amount money on bank acccount")
     private Long amount;
-
-    @Min(1)
-    @ApiModelProperty(required = true, dataType = "long", notes = "bank id")
-    private Long idBank;
 }

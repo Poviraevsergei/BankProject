@@ -4,6 +4,7 @@ import by.park.controller.request.CreateCardRequest;
 import by.park.controller.request.UpdateCardRequest;
 import by.park.domain.BankAccount;
 import by.park.domain.Card;
+import by.park.domain.Role;
 import by.park.domain.User;
 import by.park.repository.BankAccountRepository;
 import by.park.repository.CardRepository;
@@ -91,10 +92,13 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public Card createCard(CreateCardRequest request, Principal principal) {
+        Card card = null;
         User user = userRepository.findByLogin(PrincipalUtil.getUsername(principal));
-        Card card = conversionService.convert(request, Card.class);
-        if (user.getBankAccounts().contains(bankAccountRepository.findById(request.getIdBankAccount()).get())) {
+        String userRole = user.getRoles().stream().findFirst().get().getUserRole();
+        if (user.getBankAccounts().contains(bankAccountRepository.findById(request.getIdBankAccount()).get())
+                || userRole.equals("ROLE_ADMIN")) {
             log.info("Method createCard: card created.");
+            card = conversionService.convert(request, Card.class);
             return cardRepository.save(card);
         }
         log.warn("Method createCard: card not created!");
@@ -117,7 +121,8 @@ public class CardServiceImpl implements CardService {
         User user = userRepository.findByLogin(PrincipalUtil.getUsername(principal));
         Card card = cardRepository.findByCardNumber(cardNumber);
         BankAccount bankAccount = card.getIdBankAccount();
-        if (user.getId() == bankAccount.getUserId().getId()) {
+        String userRole = user.getRoles().stream().findFirst().get().getUserRole();
+        if (user.getId() == bankAccount.getUserId().getId() || userRole.equals("ROLE_ADMIN")) {
             card.setBlocked(true);
             log.info("Method blockedCard: card blocked.");
             return cardRepository.save(card);

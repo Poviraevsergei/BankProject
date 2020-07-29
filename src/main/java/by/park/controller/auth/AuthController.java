@@ -41,7 +41,7 @@ public class AuthController {
     @ApiOperation(value = "Login user by username and password")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successful login user"),
-            @ApiResponse(code = 500, message = "Server error, something wrong"),
+            @ApiResponse(code = 500, message = "Server error, something wrong")
     })
     @PostMapping("/auth")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest) {

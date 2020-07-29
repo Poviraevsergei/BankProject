@@ -77,7 +77,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/transactions/paying").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/transactions/transfer").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/transactions/**").hasRole("ADMIN")
-
                 .antMatchers("/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest()
