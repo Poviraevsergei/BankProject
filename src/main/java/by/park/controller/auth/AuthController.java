@@ -6,7 +6,6 @@ import by.park.controller.response.AuthResponse;
 import by.park.domain.User;
 import by.park.security.util.TokenUtils;
 import by.park.service.UserService;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -20,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -28,17 +26,18 @@ import javax.validation.Valid;
 @RestController
 public class AuthController {
 
-    private TokenUtils tokenUtils;
-    private AuthenticationManager authenticationManager;
-    private UserDetailsService userDetailsService;
-    private UserService userService;
+    private final TokenUtils tokenUtils;
+    private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
+    private final UserService userService;
 
-    public AuthController(UserService userService,TokenUtils tokenUtils, AuthenticationManager authenticationManager, @Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService) {
+    public AuthController(UserService userService, TokenUtils tokenUtils, AuthenticationManager authenticationManager, @Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService) {
         this.tokenUtils = tokenUtils;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.userService = userService;
     }
+
     @ApiOperation(value = "Login user by username and password")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successful login user"),
@@ -62,7 +61,7 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    @ApiOperation(value = "Registrating user")
+    @ApiOperation(value = "User registration")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successful user registration"),
             @ApiResponse(code = 201, message = "Successful user registration"),

@@ -11,6 +11,8 @@ import by.park.repository.UserRepository;
 import by.park.security.util.PrincipalUtil;
 import by.park.service.CardService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@CacheConfig(cacheNames = "cards")
 public class CardServiceImpl implements CardService {
 
     CardRepository cardRepository;
@@ -38,6 +41,7 @@ public class CardServiceImpl implements CardService {
         this.conversionService = conversionService;
     }
 
+    @Cacheable("cards")
     @Override
     public Page<Card> findAll(Pageable pageable) {
         Page<Card> result = cardRepository.findAll(pageable);

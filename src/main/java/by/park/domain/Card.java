@@ -1,7 +1,13 @@
 package by.park.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

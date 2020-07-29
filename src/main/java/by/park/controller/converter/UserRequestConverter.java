@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.util.Date;
 
-
 @Slf4j
 public abstract class UserRequestConverter<S, T> extends EntityConverter<S, T> {
 

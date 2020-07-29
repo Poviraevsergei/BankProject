@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@CacheConfig(cacheNames = "banks")
 public class BankServiceImpl implements BankService {
 
     BankRepository bankRepository;
@@ -36,6 +37,8 @@ public class BankServiceImpl implements BankService {
         this.userRepository = userRepository;
         this.conversionService = conversionService;
     }
+
+    @Cacheable("banks")
     @Override
     public Page<Bank> findAllBanks(Pageable pageable) {
         Page<Bank> result = bankRepository.findAll(pageable);

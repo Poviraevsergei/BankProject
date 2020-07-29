@@ -9,7 +9,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static io.jsonwebtoken.Claims.SUBJECT;
@@ -23,19 +27,11 @@ public class TokenUtils {
 
     private final JwtTokenConfiguration jwtTokenConfig;
 
-    public String getUsernameFromToken(String token){
+    public String getUsernameFromToken(String token) {
         return getClaimsFromToken(token).getSubject();
     }
 
-    public Date getCreatedDateFromToken(String token){
-        return (Date) getClaimsFromToken(token).get(CREATE_VALUE);
-    }
-
-    public Date getExpirationDateFromToken(String token){
-        return getClaimsFromToken(token).getExpiration();
-    }
-
-    private Claims getClaimsFromToken(String token){
+    private Claims getClaimsFromToken(String token) {
         return Jwts
                 .parser()
                 .setSigningKey(jwtTokenConfig.getSecret())
@@ -43,34 +39,25 @@ public class TokenUtils {
                 .getBody();
     }
 
-    private Date generateCurrentDate(){
+    private Date generateCurrentDate() {
         return new Date();
     }
 
-    private Date generateExpirationDate(){
-        Calendar calendar=Calendar.getInstance();
-        calendar.add(Calendar.MILLISECOND,jwtTokenConfig.getExpire());
+    private Date generateExpirationDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MILLISECOND, jwtTokenConfig.getExpire());
         return calendar.getTime();
     }
 
-    private Boolean isTokenExpired(String token){
-        final Date expiration = this.getExpirationDateFromToken(token);
-        return expiration.before(this.generateCurrentDate());
-    }
-
-    private Boolean isCreatedBeforeLastPasswordReset(Date created,Date lastPasswordRest){
-        return (lastPasswordRest != null && created.before(lastPasswordRest));
-    }
-
-    private String generateToken(Map<String,Object> claims){
+    private String generateToken(Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
-                .signWith(SignatureAlgorithm.HS512,jwtTokenConfig.getSecret())
+                .signWith(SignatureAlgorithm.HS512, jwtTokenConfig.getSecret())
                 .compact();
     }
 
-    public String generateToken(UserDetails userDetails){
+    public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(SUBJECT, userDetails.getUsername());
         claims.put(CREATE_VALUE, generateCurrentDate());
@@ -78,33 +65,16 @@ public class TokenUtils {
         return generateToken(claims);
     }
 
-    private List<String> getEncryptedRoles(UserDetails userDetails){
+    private List<String> getEncryptedRoles(UserDetails userDetails) {
         return userDetails.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
-                .map(s->s.replace("ROLE_",""))
+                .map(s -> s.replace("ROLE_", ""))
                 .map(String::toLowerCase)
                 .collect(Collectors.toList());
     }
 
-    public Boolean canTokenBeRefreshed(String token,Date lastPasswordReset){
-        final Date created = this.getCreatedDateFromToken(token);
-        return !(this.isCreatedBeforeLastPasswordReset(created, lastPasswordReset)) && !(this.isTokenExpired(token));
-    }
-
-    public String refreshToken(String token){
-        String refrashedToken;
-        try {
-            final Claims claims = this.getClaimsFromToken(token);
-            claims.put("created", this.generateCurrentDate());
-            refrashedToken = this.generateToken(claims);
-        }catch (Exception e){
-            refrashedToken = null;
-        }
-        return refrashedToken;
-    }
-
-    public Boolean validateToken(String token, UserDetails userDetails){
+    public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         return username.equals(userDetails.getUsername());
     }

@@ -19,9 +19,9 @@ import java.io.IOException;
 
 public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFilter {
 
-    private TokenUtils tokenUtils;
+    private final TokenUtils tokenUtils;
 
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     public AuthenticationTokenFilter(TokenUtils tokenUtils, @Qualifier("userDetailsService") UserDetailsService userDetailsService) {
         this.tokenUtils = tokenUtils;
@@ -35,7 +35,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         String authToken = httpServletRequest.getHeader(ApplicatiobHeaders.AUTH_TOKEN);
 
         if (StringUtils.isNotBlank(authToken)) {
-        String loginFromToken = tokenUtils.getUsernameFromToken(authToken);
+            String loginFromToken = tokenUtils.getUsernameFromToken(authToken);
             if (StringUtils.isNotBlank(loginFromToken)
                     && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(loginFromToken);
@@ -50,6 +50,6 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
                 }
             }
         }
-        chain.doFilter(req,res);
+        chain.doFilter(req, res);
     }
 }

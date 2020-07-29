@@ -3,7 +3,6 @@ package by.park.controller;
 import by.park.controller.request.CreateBankRequest;
 import by.park.controller.request.UpdateBankRequest;
 import by.park.domain.Bank;
-import by.park.exeption.CreationException;
 import by.park.exeption.ResourceNotFoundException;
 import by.park.service.BankService;
 import io.swagger.annotations.ApiImplicitParams;
@@ -11,7 +10,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiImplicitParam;
-import org.checkerframework.checker.nullness.Opt;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -110,9 +108,8 @@ public class BankController {
             @ApiResponse(code = 201, message = "Bank has been successfully created"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Bank createBank(@Valid @RequestBody CreateBankRequest createBankRequest) {
-        Bank bank = bankService.createBank(createBankRequest);
-        return bank;
+    public Optional<Bank> createBank(@Valid @RequestBody CreateBankRequest createBankRequest) {
+        return Optional.ofNullable(bankService.createBank(createBankRequest));
     }
 
     @PutMapping

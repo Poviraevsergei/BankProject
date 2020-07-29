@@ -10,5 +10,6 @@ import lombok.Data;
 public class AuthResponse {
 
     private String login;
+
     private String jwtToken;
 }

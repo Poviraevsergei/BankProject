@@ -36,7 +36,7 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleOthersException(Exception e) {
         log.error(e.getMessage(), e);
-        return new ResponseEntity<>(new ErrorMessage(e.getMessage()),
+        return new ResponseEntity<>(new ErrorMessage(e.getMessage(), e),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

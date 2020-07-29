@@ -9,7 +9,6 @@ import by.park.repository.CardRepository;
 import java.sql.Timestamp;
 import java.util.Date;
 
-
 public abstract class TransactionRequestConverter<S, T> extends EntityConverter<S, T> {
     BankAccountRepository bankAccountRepository;
     CardRepository cardRepository;
@@ -29,5 +28,4 @@ public abstract class TransactionRequestConverter<S, T> extends EntityConverter<
         transaction.setIdBankAccount(bankAccount);
         return transaction;
     }
-
 }

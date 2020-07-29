@@ -6,7 +6,6 @@ import by.park.repository.BankAccountRepository;
 import by.park.repository.CardRepository;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class TransactionTransferRequestConverter extends TransactionRequestConverter<TransferTransactionalRequest, Transaction> {
     public TransactionTransferRequestConverter(CardRepository cardRepository, BankAccountRepository bankAccountRepository) {

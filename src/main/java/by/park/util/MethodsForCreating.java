@@ -2,24 +2,24 @@ package by.park.util;
 
 public class MethodsForCreating {
     public static String createCardNumber() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < 4; i++) {
-            result = result + (int) (1000 + Math.random() * 8999);
+            result.append((int) (1000 + Math.random() * 8999));
             if (i != 3) {
-                result = result + " ";
+                result.append(" ");
             }
         }
-        return result;
+        return result.toString();
     }
 
     public static String createIBAN(String bankCode) {
-        String result = "BY20 " + bankCode + " ";
+        StringBuilder result = new StringBuilder("BY20 " + bankCode + " ");
         for (int i = 0; i < 5; i++) {
-            result = result + (int) (1000 + Math.random() * 8999);
+            result.append((int) (1000 + Math.random() * 8999));
             if (i != 4) {
-                result = result + " ";
+                result.append(" ");
             }
         }
-        return result;
+        return result.toString();
     }
 }

@@ -19,8 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    private TokenUtils tokenUtils;
-    private UserDetailsService userDetailsService;
+    private final TokenUtils tokenUtils;
+    private final UserDetailsService userDetailsService;
 
     public WebSecurityConfiguration(@Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService, TokenUtils tokenUtils) {
         this.userDetailsService = userDetailsService;
@@ -46,7 +46,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring()
                 .antMatchers("/v2/api-docs", "/configuration/ui/", "/swagger-resources/", "/configuration/security/", "/swagger-ui.html", "/webjars/");
     }
@@ -73,11 +73,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/bankAccounts/info").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/bankAccounts/create").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/bankAccounts/**").hasRole("ADMIN")
-
                 .antMatchers("/transactions/info").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/transactions/paying").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/transactions/transfer").hasAnyRole("ADMIN", "USER")
-                .antMatchers("/transactions/info").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/transactions/**").hasRole("ADMIN")
 
                 .antMatchers("/**").permitAll()

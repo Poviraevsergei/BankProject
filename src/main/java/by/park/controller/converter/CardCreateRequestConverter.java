@@ -1,7 +1,6 @@
 package by.park.controller.converter;
 
 import by.park.controller.request.CreateCardRequest;
-import by.park.domain.BankAccount;
 import by.park.domain.Card;
 import by.park.repository.BankAccountRepository;
 import org.springframework.stereotype.Component;
