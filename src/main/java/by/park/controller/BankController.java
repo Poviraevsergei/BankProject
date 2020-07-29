@@ -3,12 +3,15 @@ package by.park.controller;
 import by.park.controller.request.CreateBankRequest;
 import by.park.controller.request.UpdateBankRequest;
 import by.park.domain.Bank;
+import by.park.exeption.CreationException;
+import by.park.exeption.ResourceNotFoundException;
 import by.park.service.BankService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiImplicitParam;
+import org.checkerframework.checker.nullness.Opt;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,7 +67,8 @@ public class BankController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Optional<Bank> findBankById(@PathVariable("id") Long id) {
-        return Optional.ofNullable(bankService.findBankById(id));
+        Bank bank = Optional.ofNullable(bankService.findBankById(id)).orElseThrow(() -> new ResourceNotFoundException("Card not found!"));
+        return Optional.of(bank);
     }
 
     @GetMapping("/find-bank-by-code")
@@ -74,7 +78,8 @@ public class BankController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Optional<Bank> findBankByBankCode(@RequestParam("BankCode") String bankCode) {
-        return Optional.ofNullable(bankService.findBankByBankCode(bankCode));
+        Bank bank = Optional.ofNullable(bankService.findBankByBankCode(bankCode)).orElseThrow(() -> new ResourceNotFoundException("Bank not found!"));
+        return Optional.of(bank);
     }
 
     @GetMapping("/find-bank-by-name")
@@ -84,7 +89,8 @@ public class BankController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Optional<Bank> findBankByName(@RequestParam("bankName") String bankName) {
-        return Optional.ofNullable(bankService.findBankByName(bankName));
+        Bank bank = Optional.ofNullable(bankService.findBankByName(bankName)).orElseThrow(() -> new ResourceNotFoundException("Bank not found!"));
+        return Optional.of(bank);
     }
 
     @GetMapping("/info")
@@ -104,8 +110,9 @@ public class BankController {
             @ApiResponse(code = 201, message = "Bank has been successfully created"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Optional<Bank> createBank(@Valid @RequestBody CreateBankRequest createBankRequest) {
-        return Optional.ofNullable(bankService.createBank(createBankRequest));
+    public Bank createBank(@Valid @RequestBody CreateBankRequest createBankRequest) {
+        Bank bank = bankService.createBank(createBankRequest);
+        return bank;
     }
 
     @PutMapping
@@ -116,7 +123,8 @@ public class BankController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Optional<Bank> updateBank(@Valid @RequestBody UpdateBankRequest updateBankRequest) {
-        return Optional.ofNullable(bankService.updateBank(updateBankRequest));
+        Bank bank = Optional.ofNullable(bankService.updateBank(updateBankRequest)).orElseThrow(() -> new ResourceNotFoundException("Bank not found!"));
+        return Optional.of(bank);
     }
 
     @DeleteMapping("/{id}")
@@ -127,6 +135,7 @@ public class BankController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public void deleteBankById(@PathVariable("id") Long id) {
+        bankService.findBankById(id);
         bankService.deleteBankById(id);
     }
 }

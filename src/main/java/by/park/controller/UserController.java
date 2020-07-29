@@ -2,6 +2,7 @@ package by.park.controller;
 
 import by.park.controller.request.UpdateUserRequest;
 import by.park.domain.User;
+import by.park.exeption.ResourceNotFoundException;
 import by.park.service.UserService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -61,7 +62,8 @@ public class UserController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Optional<User> findById(@PathVariable("id") Long id) {
-        return Optional.ofNullable(userService.findUserById(id));
+        User user = Optional.ofNullable(userService.findUserById(id)).orElseThrow(ResourceNotFoundException::new);
+        return Optional.of(user);
     }
 
     @GetMapping("/find-by-login")
@@ -71,7 +73,8 @@ public class UserController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Optional<User> findByLogin(@RequestParam("login") String login) {
-        return Optional.ofNullable(userService.findUserByLogin(login));
+        User user = Optional.ofNullable(userService.findUserByLogin(login)).orElseThrow(() -> new ResourceNotFoundException("User not found!"));
+        return Optional.of(user);
     }
 
     @GetMapping("/info")

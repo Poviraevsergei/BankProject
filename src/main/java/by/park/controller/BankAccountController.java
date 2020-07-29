@@ -3,6 +3,7 @@ package by.park.controller;
 import by.park.controller.request.CreateBankAccountRequest;
 import by.park.controller.request.UpdateBankAccountRequest;
 import by.park.domain.BankAccount;
+import by.park.exeption.ResourceNotFoundException;
 import by.park.service.BankAccountService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -63,7 +64,8 @@ public class BankAccountController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Optional<BankAccount> findById(@PathVariable("id") Long id) {
-        return Optional.ofNullable(bankAccountService.findById(id));
+        BankAccount bankAccount = Optional.ofNullable(bankAccountService.findById(id)).orElseThrow(() -> new ResourceNotFoundException("Bank account not found!"));
+        return Optional.of(bankAccount);
     }
 
     @GetMapping("/find-by-IBAN")
@@ -73,7 +75,8 @@ public class BankAccountController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Optional<BankAccount> findBankAccountByIban(@RequestParam String IBAN) {
-        return Optional.ofNullable(bankAccountService.findBankAccountByIban(IBAN));
+        BankAccount bankAccount = Optional.ofNullable(bankAccountService.findBankAccountByIban(IBAN)).orElseThrow(() -> new ResourceNotFoundException("Bank account not found!"));
+        return Optional.of(bankAccount);
     }
 
     @GetMapping("/info")
@@ -106,7 +109,8 @@ public class BankAccountController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Optional<BankAccount> updateBankAccount(@Valid @RequestBody UpdateBankAccountRequest updateBankAccountRequest) {
-        return Optional.ofNullable(bankAccountService.updateBankAccount(updateBankAccountRequest));
+        BankAccount bankAccount = Optional.ofNullable(bankAccountService.updateBankAccount(updateBankAccountRequest)).orElseThrow(() -> new ResourceNotFoundException("Bank account not found!"));
+        return Optional.of(bankAccount);
     }
 
     @DeleteMapping
@@ -117,6 +121,7 @@ public class BankAccountController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public void deleteBankAccountById(Long id) {
+        findById(id);
         bankAccountService.deleteBankAccountById(id);
     }
 }

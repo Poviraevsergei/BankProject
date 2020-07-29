@@ -64,8 +64,8 @@ public class AuthController {
     @PostMapping("/registration")
     @ApiOperation(value = "Registrating user")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful user registrarion"),
-            @ApiResponse(code = 201, message = "Successful user registrarion"),
+            @ApiResponse(code = 200, message = "Successful user registration"),
+            @ApiResponse(code = 201, message = "Successful user registration"),
             @ApiResponse(code = 401, message = "Don't have authorization"),
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")

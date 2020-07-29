@@ -32,6 +32,7 @@ public class BeanConfiguration {
         factoryBean.setDataSource(dataSource);
         factoryBean.setAnnotatedPackages("by.park");
         factoryBean.afterPropertiesSet();
+        factoryBean.setHibernateProperties(getAdditionalProperties());
         SessionFactory sf = factoryBean.getObject();
         System.out.println("## getSessionFactory: " + sf);
         return sf;
@@ -51,7 +52,6 @@ public class BeanConfiguration {
 
     private Properties getAdditionalProperties() {
         Properties properties = new Properties();
-
         properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL10Dialect");
         properties.put("hibernate.show_sql", "true");
         properties.put("hibernate.connection.characterEncoding", "utf8mb4");
@@ -80,5 +80,4 @@ public class BeanConfiguration {
                 .weakKeys()
                 .recordStats();
     }
-
 }

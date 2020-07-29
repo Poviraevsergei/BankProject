@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@CacheConfig(cacheNames = {"banks", "banksById", "banksByName", "banksByCode"})
 @Service
 @Slf4j
 public class BankServiceImpl implements BankService {
@@ -37,8 +36,6 @@ public class BankServiceImpl implements BankService {
         this.userRepository = userRepository;
         this.conversionService = conversionService;
     }
-
-    @Cacheable(value = "banks")
     @Override
     public Page<Bank> findAllBanks(Pageable pageable) {
         Page<Bank> result = bankRepository.findAll(pageable);
@@ -50,7 +47,6 @@ public class BankServiceImpl implements BankService {
         return result;
     }
 
-    @Cacheable(value = "banksById")
     @Override
     public Bank findBankById(Long id) {
         Optional<Bank> result = bankRepository.findById(id);
@@ -62,7 +58,6 @@ public class BankServiceImpl implements BankService {
         return result.get();
     }
 
-    @Cacheable(value = "banksByName")
     @Override
     public Bank findBankByName(String bankName) {
         Bank result = bankRepository.findBankByBankName(bankName);
@@ -74,7 +69,6 @@ public class BankServiceImpl implements BankService {
         return result;
     }
 
-    @Cacheable(value = "banksByCode")
     @Override
     public Bank findBankByBankCode(String bankCode) {
         Bank result = bankRepository.findBankByBankCode(bankCode);

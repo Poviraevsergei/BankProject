@@ -3,12 +3,14 @@ package by.park.controller;
 import by.park.controller.request.CreateCardRequest;
 import by.park.controller.request.UpdateCardRequest;
 import by.park.domain.Card;
+import by.park.exeption.ResourceNotFoundException;
 import by.park.service.CardService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiImplicitParam;
+import org.checkerframework.checker.nullness.Opt;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,7 +65,8 @@ public class CardController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Optional<Card> findCardById(@PathVariable("id") Long id) {
-        return Optional.ofNullable(cardService.findCardById(id));
+        Card card = Optional.ofNullable(cardService.findCardById(id)).orElseThrow(() -> new ResourceNotFoundException("Card not found!"));
+        return Optional.of(card);
     }
 
     @GetMapping("/find-by-card-number")
@@ -73,7 +76,8 @@ public class CardController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Optional<Card> findCardByCardNumber(@RequestParam("CardNumber") String cardNumber) {
-        return Optional.ofNullable(cardService.findByCardNumber(cardNumber));
+        Card card = Optional.ofNullable(cardService.findByCardNumber(cardNumber)).orElseThrow(() -> new ResourceNotFoundException("Card not found!"));
+        return Optional.of(card);
     }
 
     @GetMapping("/info")
@@ -105,7 +109,8 @@ public class CardController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Optional<Card> updateCard(@Valid @RequestBody UpdateCardRequest updateCardRequest) {
-        return Optional.ofNullable(cardService.updateCard(updateCardRequest));
+        Card card = Optional.ofNullable(cardService.updateCard(updateCardRequest)).orElseThrow(() -> new ResourceNotFoundException("Card not found!"));
+        return Optional.of(card);
     }
 
     @PutMapping("/blocked")
@@ -116,7 +121,8 @@ public class CardController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Optional<Card> blockedCard(@RequestParam("cardNUmber") String cardNUmber, Principal principal) {
-        return Optional.ofNullable(cardService.blockedCard(cardNUmber, principal));
+        Card card = Optional.ofNullable(cardService.blockedCard(cardNUmber, principal)).orElseThrow(() -> new ResourceNotFoundException("Card not found!"));
+        return Optional.of(card);
     }
 
     @DeleteMapping("/{id}")
@@ -127,6 +133,7 @@ public class CardController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public void deleteCardById(@PathVariable("id") Long id) {
+        cardService.findCardById(id);
         cardService.deleteCardById(id);
     }
 }

@@ -3,6 +3,7 @@ package by.park.controller;
 import by.park.controller.request.PayingTransactionRequest;
 import by.park.controller.request.TransferTransactionalRequest;
 import by.park.domain.Transaction;
+import by.park.exeption.ResourceNotFoundException;
 import by.park.service.TransactionService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -63,7 +64,8 @@ public class TransactionController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public Optional<Transaction> findTransactionById(@PathVariable("id") Long id) {
-        return Optional.ofNullable(transactionService.findTransactionById(id));
+        Transaction transaction = Optional.ofNullable(transactionService.findTransactionById(id)).orElseThrow(() -> new ResourceNotFoundException("Transaction not found!"));
+        return Optional.of(transaction);
     }
 
     @GetMapping("/info")
@@ -104,6 +106,7 @@ public class TransactionController {
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
     public void deleteTransactionById(@PathVariable("id") Long id) {
+        transactionService.findTransactionById(id);
         transactionService.deleteTransactionById(id);
     }
 }
