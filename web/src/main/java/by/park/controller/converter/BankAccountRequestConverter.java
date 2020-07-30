@@ -19,7 +19,7 @@ public abstract class BankAccountRequestConverter<S, T> extends EntityConverter<
         this.userRepository = userRepository;
     }
 
-    protected BankAccount doConvert(BankAccount bankAccount, CreateBankAccountRequest request){
+    protected BankAccount doConvert(BankAccount bankAccount, CreateBankAccountRequest request) {
         Bank bank = bankRepository.findBankByBankName(request.getBankName());
         User user = userRepository.findByLogin(request.getUserLogin());
         bankAccount.setUserId(user);

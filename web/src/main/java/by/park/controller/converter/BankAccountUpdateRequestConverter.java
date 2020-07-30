@@ -6,7 +6,6 @@ import by.park.repository.BankRepository;
 import by.park.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class BankAccountUpdateRequestConverter extends BankAccountRequestConverter<UpdateBankAccountRequest, BankAccount> {
     public BankAccountUpdateRequestConverter(BankRepository bankRepository, UserRepository userRepository) {

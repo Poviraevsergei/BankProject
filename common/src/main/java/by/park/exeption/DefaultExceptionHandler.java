@@ -1,6 +1,5 @@
 package by.park.exeption;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +21,6 @@ public class DefaultExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorMessage> handleAuthenticationException(AuthenticationException e) {
-        log.error(e.getLocalizedMessage(), e);
-        return new ResponseEntity<>(new ErrorMessage(e.getLocalizedMessage()), HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ErrorMessage> handleExpiredJwtException(ExpiredJwtException e) {
         log.error(e.getLocalizedMessage(), e);
         return new ResponseEntity<>(new ErrorMessage(e.getLocalizedMessage()), HttpStatus.UNAUTHORIZED);
     }

@@ -31,7 +31,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final UserService userService;
-    private  final ConversionService conversionService;
+    private final ConversionService conversionService;
 
     public AuthController(ConversionService conversionService, UserService userService, TokenUtils tokenUtils, AuthenticationManager authenticationManager, @Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService) {
         this.tokenUtils = tokenUtils;

@@ -2,7 +2,6 @@ package by.park.controller;
 
 import by.park.controller.request.CreateBankAccountRequest;
 import by.park.controller.request.UpdateBankAccountRequest;
-import by.park.domain.Bank;
 import by.park.domain.BankAccount;
 import by.park.exeption.ResourceNotFoundException;
 import by.park.service.BankAccountService;
