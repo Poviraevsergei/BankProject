@@ -67,7 +67,7 @@ public class TransactionServiceImpl implements TransactionService {
         BankAccount bankAccount = bankAccountRepository.findById(card.getIdBankAccount().getId()).get();
         String userRole = user.getRoles().stream().findFirst().get().getUserRole();
         if (bankAccount.getAmount() >= transaction.getCount() &&
-                bankAccount.getUserId() == userRepository.findByLogin(PrincipalUtil.getUsername(principal)) && !card.getBlocked()
+                bankAccount.getUserId() == userRepository.findByLogin(PrincipalUtil.getUsername(principal)) && !user.getDeleted() && !card.getBlocked()
                 || userRole.equals("ROLE_ADMIN")) {
 
             bankAccount.setAmount(bankAccount.getAmount() - transaction.getCount());
@@ -100,7 +100,7 @@ public class TransactionServiceImpl implements TransactionService {
         BankAccount bankAccountFrom = bankAccountRepository.findById(cardFrom.getIdBankAccount().getId()).get();
         BankAccount bankAccountTo = bankAccountRepository.findById(cardTo.getIdBankAccount().getId()).get();
         String userRole = user.getRoles().stream().findFirst().get().getUserRole();
-        if (bankAccountFrom.getAmount() >= transaction.getCount() &&
+        if (bankAccountFrom.getAmount() >= transaction.getCount() && !user.getDeleted() &&
                 bankAccountFrom.getUserId() == userRepository.findByLogin(PrincipalUtil.getUsername(principal)) && !cardFrom.getBlocked() && !cardTo.getBlocked()
                 || userRole.equals("ROLE_ADMIN")
         ) {
