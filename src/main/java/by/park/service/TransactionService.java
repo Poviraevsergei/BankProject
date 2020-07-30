@@ -1,7 +1,6 @@
 package by.park.service;
 
-import by.park.controller.request.PayingTransactionRequest;
-import by.park.controller.request.TransferTransactionalRequest;
+import by.park.domain.Card;
 import by.park.domain.Transaction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,9 +16,9 @@ public interface TransactionService {
 
     List<Transaction> transactionInformation(Principal principal);
 
-    String paying(PayingTransactionRequest payingTransactionRequest, Principal principal);
+    String paying(Transaction transaction, Card cardFrom, Principal principal);
 
-    String transfer(TransferTransactionalRequest transferTransactionalRequest, Principal principal);
+    String transfer(Transaction transaction, Card cardFrom, Card cardTo, Principal principal);
 
     void deleteTransactionById(Long id);
 }

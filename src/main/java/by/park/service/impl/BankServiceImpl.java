@@ -29,13 +29,11 @@ import java.util.stream.Collectors;
 public class BankServiceImpl implements BankService {
 
     BankRepository bankRepository;
-    ConversionService conversionService;
     UserRepository userRepository;
 
-    public BankServiceImpl(ConversionService conversionService, BankRepository bankRepository, UserRepository userRepository) {
+    public BankServiceImpl(BankRepository bankRepository, UserRepository userRepository) {
         this.bankRepository = bankRepository;
         this.userRepository = userRepository;
-        this.conversionService = conversionService;
     }
 
     @Cacheable("banks")
@@ -95,25 +93,23 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public Bank createBank(CreateBankRequest request) {
-        Bank result = conversionService.convert(request, Bank.class);
-        if (result == null) {
+    public Bank createBank(Bank bank) {
+        if (bank == null) {
             log.warn("Method createBank: bank not created!");
         } else {
             log.info("Method createBank: bank created.");
         }
-        return bankRepository.save(result);
+        return bankRepository.save(bank);
     }
 
     @Override
-    public Bank updateBank(UpdateBankRequest request) {
-        Bank result = conversionService.convert(request, Bank.class);
-        if (result == null) {
+    public Bank updateBank(Bank bank) {
+        if (bank == null) {
             log.warn("Method updateBank: bank not updated!");
         } else {
             log.info("Method updateBank: bank updated.");
         }
-        return bankRepository.save(result);
+        return bankRepository.save(bank);
     }
 
     @Override

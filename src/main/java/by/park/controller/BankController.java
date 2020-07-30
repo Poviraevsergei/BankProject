@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiImplicitParam;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,9 +39,11 @@ import java.util.Optional;
 public class BankController {
 
     BankService bankService;
+    ConversionService conversionService;
 
-    public BankController(BankService bankService) {
+    public BankController(ConversionService conversionService, BankService bankService) {
         this.bankService = bankService;
+        this.conversionService = conversionService;
     }
 
     @GetMapping
@@ -108,8 +111,9 @@ public class BankController {
             @ApiResponse(code = 201, message = "Bank has been successfully created"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Optional<Bank> createBank(@Valid @RequestBody CreateBankRequest createBankRequest) {
-        return Optional.ofNullable(bankService.createBank(createBankRequest));
+    public Optional<Bank> createBank(@Valid @RequestBody CreateBankRequest request) {
+        Bank bank = conversionService.convert(request, Bank.class);
+        return Optional.ofNullable(bankService.createBank(bank));
     }
 
     @PutMapping
@@ -119,8 +123,8 @@ public class BankController {
             @ApiResponse(code = 201, message = "Bank has been successfully updated"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Optional<Bank> updateBank(@Valid @RequestBody UpdateBankRequest updateBankRequest) {
-        Bank bank = Optional.ofNullable(bankService.updateBank(updateBankRequest)).orElseThrow(() -> new ResourceNotFoundException("Bank not found!"));
+    public Optional<Bank> updateBank(@Valid @RequestBody UpdateBankRequest request) {
+        Bank bank = Optional.ofNullable(bankService.updateBank(conversionService.convert(request, Bank.class))).orElseThrow(() -> new ResourceNotFoundException("Bank not found!"));
         return Optional.of(bank);
     }
 

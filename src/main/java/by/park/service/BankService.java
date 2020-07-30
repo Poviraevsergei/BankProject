@@ -18,9 +18,9 @@ public interface BankService {
 
     Bank findBankByBankCode(String bankCode);
 
-    Bank createBank(CreateBankRequest createBankRequest);
+    Bank createBank(Bank bank);
 
-    Bank updateBank(UpdateBankRequest updateBankRequest);
+    Bank updateBank(Bank bank);
 
     List<Bank> bankInformation(Principal principal);
 

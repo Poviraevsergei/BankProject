@@ -1,7 +1,5 @@
 package by.park.service;
 
-import by.park.controller.request.CreateUserRequest;
-import by.park.controller.request.UpdateUserRequest;
 import by.park.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,9 +14,9 @@ public interface UserService {
 
     User findUserByLogin(String login);
 
-    User register(CreateUserRequest createUserRequest);
+    User register(User user);
 
-    User updateUser(UpdateUserRequest updateUserRequest);
+    User updateUser(User user);
 
     void deleteUserById(Long id);
 

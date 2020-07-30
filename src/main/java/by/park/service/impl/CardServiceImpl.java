@@ -33,13 +33,11 @@ public class CardServiceImpl implements CardService {
     CardRepository cardRepository;
     BankAccountRepository bankAccountRepository;
     UserRepository userRepository;
-    ConversionService conversionService;
 
-    public CardServiceImpl(ConversionService conversionService, UserRepository userRepository, CardRepository cardRepository, BankAccountRepository bankAccountRepository) {
+    public CardServiceImpl(UserRepository userRepository, CardRepository cardRepository, BankAccountRepository bankAccountRepository) {
         this.cardRepository = cardRepository;
         this.bankAccountRepository = bankAccountRepository;
         this.userRepository = userRepository;
-        this.conversionService = conversionService;
     }
 
     @Cacheable("cards")
@@ -91,29 +89,26 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public Card createCard(CreateCardRequest request, Principal principal) {
-        Card card = null;
+    public Card createCard(Card card,BankAccount bankAccount, Principal principal) {
         User user = userRepository.findByLogin(PrincipalUtil.getUsername(principal));
         String userRole = user.getRoles().stream().findFirst().get().getUserRole();
-        if (user.getBankAccounts().contains(bankAccountRepository.findById(request.getIdBankAccount()).get())
+        if (user.getBankAccounts().contains(bankAccount)
                 || userRole.equals("ROLE_ADMIN")) {
             log.info("Method createCard: card created.");
-            card = conversionService.convert(request, Card.class);
             return cardRepository.save(card);
         }
         log.warn("Method createCard: card not created!");
-        return card;
+        return null;
     }
 
     @Override
-    public Card updateCard(UpdateCardRequest request) {
-        Card result = conversionService.convert(request, Card.class);
-        if (result == null) {
+    public Card updateCard(Card card) {
+        if (card == null) {
             log.warn("Method updateCard: card not updated!");
         } else {
             log.info("Method updateCard: card updated.");
         }
-        return cardRepository.save(result);
+        return cardRepository.save(card);
     }
 
     @Override

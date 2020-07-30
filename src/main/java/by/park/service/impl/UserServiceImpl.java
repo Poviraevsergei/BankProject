@@ -1,14 +1,11 @@
 package by.park.service.impl;
 
-import by.park.controller.request.CreateUserRequest;
-import by.park.controller.request.UpdateUserRequest;
 import by.park.domain.User;
 import by.park.repository.BankRepository;
 import by.park.repository.UserRepository;
 import by.park.security.util.PrincipalUtil;
 import by.park.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,12 +19,10 @@ public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
     BankRepository bankRepository;
-    ConversionService conversionService;
 
-    public UserServiceImpl(ConversionService conversionService, UserRepository userRepository, BankRepository bankRepository) {
+    public UserServiceImpl(UserRepository userRepository, BankRepository bankRepository) {
         this.userRepository = userRepository;
         this.bankRepository = bankRepository;
-        this.conversionService = conversionService;
     }
 
     @Override
@@ -75,25 +70,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(CreateUserRequest request) {
-        User result = conversionService.convert(request, User.class);
-        if (result == null) {
+    public User register(User user) {
+        if (user == null) {
             log.warn("Method register: user not created!");
         } else {
             log.info("Method register: user created.");
         }
-        return userRepository.save(result);
+        return userRepository.save(user);
     }
 
     @Override
-    public User updateUser(UpdateUserRequest request) {
-        User result = conversionService.convert(request, User.class);
-        if (result == null) {
+    public User updateUser(User user) {
+        if (user == null) {
             log.warn("Method updateUser: user not updated!");
         } else {
             log.info("Method updateUser: user updated.");
         }
-        return userRepository.save(result);
+        return userRepository.save(user);
     }
 
     @Override

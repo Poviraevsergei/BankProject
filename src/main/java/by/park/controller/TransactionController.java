@@ -2,14 +2,17 @@ package by.park.controller;
 
 import by.park.controller.request.PayingTransactionRequest;
 import by.park.controller.request.TransferTransactionalRequest;
+import by.park.domain.Card;
 import by.park.domain.Transaction;
 import by.park.exeption.ResourceNotFoundException;
+import by.park.service.CardService;
 import by.park.service.TransactionService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiImplicitParam;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,9 +40,13 @@ import java.util.Optional;
 public class TransactionController {
 
     TransactionService transactionService;
+    ConversionService conversionService;
+    CardService cardService;
 
-    public TransactionController(TransactionService transactionService) {
+    public TransactionController(CardService cardService, ConversionService conversionService, TransactionService transactionService) {
         this.transactionService = transactionService;
+        this.conversionService = conversionService;
+        this.cardService = cardService;
     }
 
     @GetMapping
@@ -84,8 +91,10 @@ public class TransactionController {
             @ApiResponse(code = 200, message = "Payment was successful"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public String paying(@Valid @RequestBody PayingTransactionRequest payingTransactionRequest, Principal principal) {
-        return transactionService.paying(payingTransactionRequest, principal);
+    public String paying(@Valid @RequestBody PayingTransactionRequest request, Principal principal) {
+        Transaction transaction = conversionService.convert(request, Transaction.class);
+        Card cardFrom = cardService.findByCardNumber(request.getFromCardNumber());
+        return transactionService.paying(transaction, cardFrom, principal);
     }
 
     @PutMapping("/transfer")
@@ -94,8 +103,11 @@ public class TransactionController {
             @ApiResponse(code = 200, message = "Transfer of money was successful"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public String transfer(@Valid @RequestBody TransferTransactionalRequest transferTransactionalRequest, Principal principal) {
-        return transactionService.transfer(transferTransactionalRequest, principal);
+    public String transfer(@Valid @RequestBody TransferTransactionalRequest request, Principal principal) {
+        Transaction transaction = conversionService.convert(request, Transaction.class);
+        Card cardTo = cardService.findByCardNumber(request.getToCardNumber());
+        Card cardFrom = cardService.findByCardNumber(request.getFromCardNumber());
+        return transactionService.transfer(transaction, cardFrom, cardTo, principal);
     }
 
     @DeleteMapping("/{id}")

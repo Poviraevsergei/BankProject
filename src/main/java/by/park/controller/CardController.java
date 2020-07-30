@@ -2,14 +2,17 @@ package by.park.controller;
 
 import by.park.controller.request.CreateCardRequest;
 import by.park.controller.request.UpdateCardRequest;
+import by.park.domain.BankAccount;
 import by.park.domain.Card;
 import by.park.exeption.ResourceNotFoundException;
+import by.park.service.BankAccountService;
 import by.park.service.CardService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiImplicitParam;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,9 +40,13 @@ import java.util.Optional;
 })
 public class CardController {
     CardService cardService;
+    ConversionService conversionService;
+    BankAccountService bankAccountService;
 
-    public CardController(CardService cardService) {
+    public CardController(BankAccountService bankAccountService, ConversionService conversionService, CardService cardService) {
+        this.conversionService = conversionService;
         this.cardService = cardService;
+        this.bankAccountService = bankAccountService;
     }
 
     @GetMapping
@@ -96,8 +103,10 @@ public class CardController {
             @ApiResponse(code = 201, message = "Card has been successfully created"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Optional<Card> createCard(@Valid @RequestBody CreateCardRequest createCardRequest, Principal principal) {
-        return Optional.ofNullable(cardService.createCard(createCardRequest, principal));
+    public Optional<Card> createCard(@Valid @RequestBody CreateCardRequest request, Principal principal) {
+        Card card = conversionService.convert(request, Card.class);
+        BankAccount bankAccount = bankAccountService.findById(request.getIdBankAccount());
+        return Optional.ofNullable(cardService.createCard(card, bankAccount, principal));
     }
 
     @PutMapping
@@ -107,8 +116,8 @@ public class CardController {
             @ApiResponse(code = 201, message = "Card has been successfully updated"),
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Optional<Card> updateCard(@Valid @RequestBody UpdateCardRequest updateCardRequest) {
-        Card card = Optional.ofNullable(cardService.updateCard(updateCardRequest)).orElseThrow(() -> new ResourceNotFoundException("Card not found!"));
+    public Optional<Card> updateCard(@Valid @RequestBody UpdateCardRequest request) {
+        Card card = Optional.ofNullable(cardService.updateCard(conversionService.convert(request, Card.class))).orElseThrow(() -> new ResourceNotFoundException("Card not found!"));
         return Optional.of(card);
     }
 

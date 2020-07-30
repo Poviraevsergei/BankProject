@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,12 +31,14 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final UserService userService;
+    private  final ConversionService conversionService;
 
-    public AuthController(UserService userService, TokenUtils tokenUtils, AuthenticationManager authenticationManager, @Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService) {
+    public AuthController(ConversionService conversionService, UserService userService, TokenUtils tokenUtils, AuthenticationManager authenticationManager, @Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService) {
         this.tokenUtils = tokenUtils;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.userService = userService;
+        this.conversionService = conversionService;
     }
 
     @ApiOperation(value = "Login user by username and password")
@@ -69,7 +72,8 @@ public class AuthController {
             @ApiResponse(code = 403, message = "Don't have authority"),
             @ApiResponse(code = 404, message = "Resource not found")
     })
-    public User register(@Valid @RequestBody CreateUserRequest createUserRequest) {
-        return userService.register(createUserRequest);
+    public User register(@Valid @RequestBody CreateUserRequest request) {
+        User user = conversionService.convert(request, User.class);
+        return userService.register(user);
     }
 }

@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiImplicitParam;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,9 +36,11 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+    private final ConversionService conversionService;
 
-    public UserController(UserService userService) {
+    public UserController(ConversionService conversionService, UserService userService) {
         this.userService = userService;
+        this.conversionService = conversionService;
     }
 
     @GetMapping
@@ -94,8 +97,9 @@ public class UserController {
             @ApiResponse(code = 201, message = "User has been successfully updated")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Optional<User> update(@Valid @RequestBody UpdateUserRequest updateUserRequest) {
-        return Optional.ofNullable(userService.updateUser(updateUserRequest));
+    public Optional<User> update(@Valid @RequestBody UpdateUserRequest request) {
+        User user = conversionService.convert(request, User.class);
+        return Optional.ofNullable(userService.updateUser(user));
     }
 
     @DeleteMapping("/{id}")

@@ -1,7 +1,6 @@
 package by.park.service;
 
-import by.park.controller.request.CreateCardRequest;
-import by.park.controller.request.UpdateCardRequest;
+import by.park.domain.BankAccount;
 import by.park.domain.Card;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,9 +17,9 @@ public interface CardService {
 
     List<Card> cardInformation(Principal principal);
 
-    Card createCard(CreateCardRequest createCardRequest, Principal principal);
+    Card createCard(Card card, BankAccount bankAccount, Principal principal);
 
-    Card updateCard(UpdateCardRequest updateCardRequest);
+    Card updateCard(Card card);
 
     Card blockedCard(String cardNumber, Principal principal);
 

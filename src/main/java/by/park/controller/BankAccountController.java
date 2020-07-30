@@ -2,6 +2,7 @@ package by.park.controller;
 
 import by.park.controller.request.CreateBankAccountRequest;
 import by.park.controller.request.UpdateBankAccountRequest;
+import by.park.domain.Bank;
 import by.park.domain.BankAccount;
 import by.park.exeption.ResourceNotFoundException;
 import by.park.service.BankAccountService;
@@ -10,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiImplicitParam;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,9 +39,11 @@ import java.util.Optional;
 })
 public class BankAccountController {
     BankAccountService bankAccountService;
+    ConversionService conversionService;
 
-    public BankAccountController(BankAccountService bankAccountService) {
+    public BankAccountController(ConversionService conversionService, BankAccountService bankAccountService) {
         this.bankAccountService = bankAccountService;
+        this.conversionService = conversionService;
     }
 
     @GetMapping
@@ -97,8 +101,8 @@ public class BankAccountController {
             @ApiResponse(code = 201, message = "Bank account has been successfully created")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Optional<BankAccount> createBankAccount(@Valid @RequestBody CreateBankAccountRequest createBankAccountRequest) {
-        return Optional.ofNullable(bankAccountService.createBankAccount(createBankAccountRequest));
+    public Optional<BankAccount> createBankAccount(@Valid @RequestBody CreateBankAccountRequest request) {
+        return Optional.ofNullable(bankAccountService.createBankAccount(conversionService.convert(request, BankAccount.class)));
     }
 
     @PutMapping
@@ -108,8 +112,8 @@ public class BankAccountController {
             @ApiResponse(code = 201, message = "Bank account has been successfully updated")
     })
     @ApiImplicitParam(name = "X-Auth_Token", required = true, dataType = "string", paramType = "header", value = "token")
-    public Optional<BankAccount> updateBankAccount(@Valid @RequestBody UpdateBankAccountRequest updateBankAccountRequest) {
-        BankAccount bankAccount = Optional.ofNullable(bankAccountService.updateBankAccount(updateBankAccountRequest)).orElseThrow(() -> new ResourceNotFoundException("Bank account not found!"));
+    public Optional<BankAccount> updateBankAccount(@Valid @RequestBody UpdateBankAccountRequest request) {
+        BankAccount bankAccount = Optional.ofNullable(bankAccountService.updateBankAccount(conversionService.convert(request, BankAccount.class))).orElseThrow(() -> new ResourceNotFoundException("Bank account not found!"));
         return Optional.of(bankAccount);
     }
 

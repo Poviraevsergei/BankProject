@@ -34,14 +34,12 @@ public class TransactionServiceImpl implements TransactionService {
     BankAccountRepository bankAccountRepository;
     CardRepository cardRepository;
     UserRepository userRepository;
-    ConversionService conversionService;
 
-    public TransactionServiceImpl(ConversionService conversionService, UserRepository userRepository, TransactionRepository transactionRepository, CardRepository cardRepository, BankAccountRepository bankAccountRepository) {
+    public TransactionServiceImpl(UserRepository userRepository, TransactionRepository transactionRepository, CardRepository cardRepository, BankAccountRepository bankAccountRepository) {
         this.transactionRepository = transactionRepository;
         this.bankAccountRepository = bankAccountRepository;
         this.cardRepository = cardRepository;
         this.userRepository = userRepository;
-        this.conversionService = conversionService;
     }
 
     @Override
@@ -67,23 +65,19 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public String paying(PayingTransactionRequest request, Principal principal) {
+    public String paying(Transaction transaction, Card card, Principal principal) {
         User user = userRepository.findByLogin(PrincipalUtil.getUsername(principal));
-        BankAccount bankAccount = bankAccountRepository.findById(
-                cardRepository.findByCardNumber(request.getFromCardNumber()).getIdBankAccount().getId()
-        ).get();
-        Card cardFrom = cardRepository.findByCardNumber(request.getFromCardNumber());
+        BankAccount bankAccount = bankAccountRepository.findById(card.getIdBankAccount().getId()).get();
         String userRole = user.getRoles().stream().findFirst().get().getUserRole();
-        if (bankAccount.getAmount() >= request.getCount() &&
-                bankAccount.getUserId() == userRepository.findByLogin(PrincipalUtil.getUsername(principal)) && !cardFrom.getBlocked()
+        if (bankAccount.getAmount() >= transaction.getCount() &&
+                bankAccount.getUserId() == userRepository.findByLogin(PrincipalUtil.getUsername(principal)) && !card.getBlocked()
                 || userRole.equals("ROLE_ADMIN")) {
-            Transaction transaction = conversionService.convert(request, Transaction.class);
-            if (transaction != null) {
-                bankAccount.setAmount(bankAccount.getAmount() - request.getCount());
-                transactionRepository.save(transaction);
-                log.info("Method paying: payment completed successfully.");
-                return "Payment completed successfully";
-            }
+
+            bankAccount.setAmount(bankAccount.getAmount() - transaction.getCount());
+            transactionRepository.save(transaction);
+            log.info("Method paying: payment completed successfully.");
+            return "Payment completed successfully";
+
         }
         log.warn("Method paying: there was a problem with payment");
         return "There was a problem with payment";
@@ -104,27 +98,22 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public String transfer(TransferTransactionalRequest request, Principal principal) {
+    public String transfer(Transaction transaction, Card cardFrom, Card cardTo, Principal principal) {
         User user = userRepository.findByLogin(PrincipalUtil.getUsername(principal));
-        BankAccount bankAccountFrom = bankAccountRepository.findById(cardRepository.findByCardNumber(request.getFromCardNumber()).getIdBankAccount().getId()).get();
-        BankAccount bankAccountTo = bankAccountRepository.findById(cardRepository.findByCardNumber(request.getToCardNumber()).getIdBankAccount().getId()).get();
-        Card cardTo = cardRepository.findByCardNumber(request.getToCardNumber());
-        Card cardFrom = cardRepository.findByCardNumber(request.getFromCardNumber());
+        BankAccount bankAccountFrom = bankAccountRepository.findById(cardFrom.getIdBankAccount().getId()).get();
+        BankAccount bankAccountTo = bankAccountRepository.findById(cardTo.getIdBankAccount().getId()).get();
         String userRole = user.getRoles().stream().findFirst().get().getUserRole();
-        if (bankAccountFrom.getAmount() >= request.getCount() &&
+        if (bankAccountFrom.getAmount() >= transaction.getCount() &&
                 bankAccountFrom.getUserId() == userRepository.findByLogin(PrincipalUtil.getUsername(principal)) && !cardFrom.getBlocked() && !cardTo.getBlocked()
                 || userRole.equals("ROLE_ADMIN")
         ) {
-            Transaction transaction = conversionService.convert(request, Transaction.class);
-            if (transaction != null) {
-                bankAccountFrom.setAmount(
-                        bankAccountFrom.getAmount() - request.getCount());
-                bankAccountTo.setAmount(
-                        bankAccountTo.getAmount() + request.getCount());
-                transactionRepository.save(transaction);
-                log.info("Method transfer: money transfer was successful.");
-                return "Money transfer was successful!";
-            }
+            bankAccountFrom.setAmount(
+                    bankAccountFrom.getAmount() - transaction.getCount());
+            bankAccountTo.setAmount(
+                    bankAccountTo.getAmount() + transaction.getCount());
+            transactionRepository.save(transaction);
+            log.info("Method transfer: money transfer was successful.");
+            return "Money transfer was successful!";
         }
         log.warn("Method transfer: there was a problem with money transfer!");
         return "There was a problem with money transfer";

@@ -29,14 +29,12 @@ public class BankAccountServiceImpl implements BankAccountService {
     BankAccountRepository bankAccountRepository;
     UserRepository userRepository;
     BankRepository bankRepository;
-    ConversionService conversionService;
 
-    public BankAccountServiceImpl(ConversionService conversionService, BankRepository bankRepository, BankAccountRepository bankAccountRepository, UserRepository userRepository) {
+    public BankAccountServiceImpl(BankRepository bankRepository, BankAccountRepository bankAccountRepository, UserRepository userRepository) {
         this.bankAccountRepository = bankAccountRepository;
         this.userRepository = userRepository;
         this.bankRepository = bankRepository;
-        this.conversionService = conversionService;
-    }
+            }
 
     @Override
     public Page<BankAccount> findAll(Pageable pageable) {
@@ -85,25 +83,23 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public BankAccount createBankAccount(CreateBankAccountRequest request) {
-        BankAccount result = conversionService.convert(request, BankAccount.class);
-        if (result == null) {
+    public BankAccount createBankAccount(BankAccount bankAccount) {
+        if (bankAccount == null) {
             log.warn("Method createBankAccount: bank account not created!");
         } else {
             log.info("Method createBankAccount: bank account created.");
         }
-        return bankAccountRepository.save(result);
+        return bankAccountRepository.save(bankAccount);
     }
 
     @Override
-    public BankAccount updateBankAccount(UpdateBankAccountRequest request) {
-        BankAccount result = conversionService.convert(request, BankAccount.class);
-        if (result == null) {
+    public BankAccount updateBankAccount(BankAccount bankAccount) {
+        if (bankAccount == null) {
             log.warn("Method updateBankAccount: bank account not updated!");
         } else {
             log.info("Method updateBankAccount: bank account updated.");
         }
-        return bankAccountRepository.save(result);
+        return bankAccountRepository.save(bankAccount);
     }
 
     @Override
